@@ -27,14 +27,21 @@ test("stable hydration with a different client clock, correct dates, maps and re
   await expect(page.locator("#wedding-info")).toContainText("16h00");
   await expect(page.locator("#wedding-info")).toContainText("09h00");
   const bride = page.getByRole("article", { name: "Lịch lễ cô dâu", exact: true });
-  await expect(bride).toContainText("Lễ Ăn hỏi");
-  await expect(bride).toContainText("Lễ đón dâu");
+  await expect(bride).toContainText("Bữa cơm thân mật");
+  await expect(bride).toContainText("Lễ Đón dâu");
   await expect(bride.locator("time")).toHaveCount(2);
   await expect(bride.locator("time").nth(0)).toHaveAttribute("datetime", "2026-11-28T16:00:00+07:00");
   await expect(bride.locator("time").nth(0)).toContainText("16h00");
   await expect(bride.locator("time").nth(1)).toHaveAttribute("datetime", "2026-11-29T09:00:00+07:00");
   await expect(bride.locator("time").nth(1)).toContainText("09h00");
-  await expect(page.getByRole("article", { name: "Lịch lễ chú rể", exact: true }).locator("time")).toHaveCount(1);
+  const groom = page.getByRole("article", { name: "Lịch lễ chú rể", exact: true });
+  await expect(groom).toContainText("Bữa cơm thân mật");
+  await expect(groom).toContainText("Lễ Thành hôn");
+  await expect(groom.locator("time")).toHaveCount(2);
+  await expect(groom.locator("time").nth(0)).toHaveAttribute("datetime", "2026-11-28T16:00:00+07:00");
+  await expect(groom.locator("time").nth(0)).toContainText("16h00");
+  await expect(groom.locator("time").nth(1)).toHaveAttribute("datetime", "2026-11-29T11:00:00+07:00");
+  await expect(groom.locator("time").nth(1)).toContainText("11h00");
   await expect(page.getByRole("link", { name: "Chỉ đường đến lễ cưới bên chú rể" })).toHaveAttribute("href", /destination=20\.8152004%2C106\.3205681/);
   await expect(page.getByRole("link", { name: "Chỉ đường đến lễ cưới bên cô dâu" })).toHaveAttribute("href", /destination=20\.8066873%2C106\.4282514/);
   expect(await page.locator("a[href*=rsvp]").count()).toBe(0);
@@ -53,7 +60,7 @@ test("stable hydration with a different client clock, correct dates, maps and re
     expect(cards[0].height).toBeCloseTo(cards[1].height, 0);
   }
   await page.setViewportSize(testInfo.project.name === "mobile" ? { width: 390, height: 844 } : { width: 1440, height: 1000 });
-  const background = await page.request.get("/media/backgrounds/sage-continuous.webp");
+  const background = await page.request.get("/media/backgrounds/beige-floral-continuous.webp");
   expect(background.status()).toBe(200);
   expect(background.headers()["content-type"]).toContain("image/webp");
   await expect(page.locator(".page-backdrop")).toHaveCount(1);

@@ -37,7 +37,7 @@ html {
 
 body {
   min-height: 100vh;
-  background: #dfe8d7;
+  background: #f8efe3;
   color: #2a2a2a;
   font-family: var(--font-inter), Arial, sans-serif;
   text-rendering: optimizeLegibility;
@@ -88,7 +88,7 @@ section[id] {
 .wedding-page {
   position: relative;
   isolation: isolate;
-  background-color: #dfe8d7;
+  background-color: #f8efe3;
 }
 
 .page-backdrop {
@@ -96,8 +96,8 @@ section[id] {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-color: #dfe8d7;
-  background-image: url("/media/backgrounds/sage-continuous.webp");
+  background-color: #f8efe3;
+  background-image: url("/media/backgrounds/beige-floral-continuous.webp");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -107,7 +107,7 @@ section[id] {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at center, rgb(239 244 233 / 42%), rgb(239 244 233 / 12%) 72%);
+  background: radial-gradient(ellipse at center, rgb(250 245 237 / 42%), rgb(250 245 237 / 12%) 72%);
 }
 
 .wedding-paper {

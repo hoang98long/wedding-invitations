@@ -12,11 +12,18 @@ export const ceremonies = [
     name: "Hoàng Long",
     events: [
       {
-        title: "Lễ cưới",
+        title: "Bữa cơm thân mật",
         date: "28/11/2026",
         weekday: "Thứ Bảy",
         time: "16h00",
         dateTime: "2026-11-28T16:00:00+07:00"
+      },
+      {
+        title: "Lễ Thành hôn",
+        date: "29/11/2026",
+        weekday: "Chủ Nhật",
+        time: "11h00",
+        dateTime: "2026-11-29T11:00:00+07:00"
       }
     ],
     area: "Tân Kỳ, Hải Phòng",
@@ -30,14 +37,14 @@ export const ceremonies = [
     name: "Hà Thanh",
     events: [
       {
-        title: "Lễ Ăn hỏi",
+        title: "Bữa cơm thân mật",
         date: "28/11/2026",
         weekday: "Thứ Bảy",
         time: "16h00",
         dateTime: "2026-11-28T16:00:00+07:00"
       },
       {
-        title: "Lễ đón dâu",
+        title: "Lễ Đón dâu",
         date: "29/11/2026",
         weekday: "Chủ Nhật",
         time: "09h00",
