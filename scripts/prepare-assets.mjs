@@ -1,4 +1,4 @@
-import { mkdir, readdir, copyFile, stat } from "node:fs/promises";
+import { access, mkdir, readdir, copyFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -6,6 +6,14 @@ import sharp from "sharp";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const source = path.join(root, "resources");
 const destination = path.join(root, "public", "media");
+try {
+  await access(path.join(source, "images"));
+  await access(path.join(source, "qr"));
+  await access(path.join(source, "sound", "Music.mp3"));
+} catch {
+  console.error("Thư mục resources/ chỉ lưu cục bộ. Hãy đặt ảnh gốc vào resources/images, QR vào resources/qr và nhạc vào resources/sound/Music.mp3 trước khi chạy npm run assets. Deploy sử dụng public/media có sẵn và không cần chạy bước này.");
+  process.exit(1);
+}
 await mkdir(path.join(destination, "images"), { recursive: true });
 await mkdir(path.join(destination, "qr"), { recursive: true });
 await mkdir(path.join(destination, "sound"), { recursive: true });

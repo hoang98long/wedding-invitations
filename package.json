@@ -2,10 +2,14 @@
   "name": "wedding-invitations",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev",
     "assets": "node scripts/prepare-assets.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
+    "export:source": "node scripts/export-source.mjs",
     "test:e2e": "playwright test",
     "build": "next build",
     "start": "next start",

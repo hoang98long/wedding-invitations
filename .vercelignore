@@ -1,0 +1,34 @@
+# Build everything from source on Vercel.
+.git/
+node_modules/
+.next/
+out/
+dist/
+build/
+.vercel/
+.turbo/
+.npm/
+.pnpm-store/
+
+# Original media stays local; public/media contains the deployable versions.
+resources/
+.local/
+data/
+
+# Local configuration, editor files, logs, and browser QA.
+.env*
+!.env.example
+.idea/
+.vscode/
+*.log
+*.tsbuildinfo
+next-env.d.ts
+coverage/
+test-results/
+playwright-report/
+playwright/
+tests/
+playwright.config.ts
+.DS_Store
+Thumbs.db
+Desktop.ini

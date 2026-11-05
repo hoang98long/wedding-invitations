@@ -4,7 +4,7 @@ Website thiệp cưới tiếng Việt bằng Next.js 15, React 19, TypeScript v
 
 ## Chạy tại máy
 
-Yêu cầu Node.js 22 trở lên.
+Yêu cầu Node.js **22.x**, đã khai báo trong **package.json** và **.nvmrc**.
 
 ```bash
 npm ci
@@ -12,6 +12,69 @@ npm run dev
 ```
 
 Mở địa chỉ Next.js hiển thị trong terminal. Để xem từ điện thoại, kết nối cùng mạng Wi-Fi và truy cập địa chỉ Network tương ứng. Khi đưa website lên Internet, sử dụng HTTPS.
+
+## Đưa mã nguồn lên GitHub
+
+Đưa mã nguồn cùng tài nguyên web đã tối ưu lên GitHub; thư viện sẽ được cài lại bằng **npm ci** từ **package-lock.json**.
+
+| Đưa lên GitHub | Bỏ qua, giữ tại máy |
+| --- | --- |
+| app/, components/, lib/ | node_modules/, .next/, .local/ |
+| public/media/, public/fonts/ | resources/ chứa ảnh và nhạc gốc |
+| scripts/, supabase/, tests/ | data/ chứa lời chúc lưu tại máy |
+| package.json, package-lock.json, các file cấu hình | Log, cache, kết quả kiểm thử |
+| .gitignore, .vercelignore, vercel.json, .env.example | .env.local, .env.production và biến môi trường bí mật |
+
+**Giữ public/** trong repository: đây là ảnh, QR, nhạc và font mà website sử dụng. Build không cần thư mục resources/.
+
+Các file .next/, resources/, log và next-env.d.ts từng được commit đã được bỏ theo dõi trong Git; file tại máy vẫn còn nguyên. Commit các thay đổi và push lên repository hiện tại như bình thường:
+
+```bash
+git add .
+git commit -m "Prepare source for GitHub and Vercel"
+git push
+```
+
+Nếu remote origin chưa được cấu hình, thêm địa chỉ repository GitHub của bạn trước khi push.
+
+### Tạo bản mã nguồn sạch cho repository mới
+
+Các commit cũ vẫn chứa file build và ảnh gốc. .gitignore áp dụng cho lần commit tiếp theo và không làm nhỏ lịch sử đã có. Cách xử lý file đã được theo dõi được mô tả trong [tài liệu GitHub](https://docs.github.com/en/get-started/git-basics/ignoring-files).
+
+Để bắt đầu một repository mới chỉ với mã nguồn hiện tại, chạy:
+
+```bash
+npm run export:source
+```
+
+Script tạo thư mục có tên theo thời gian trong **.local/github-ready/** và in đường dẫn cụ thể. Thư mục xuất chứa mã nguồn, tài nguyên web và cấu hình; đã loại dependency, build, tài nguyên gốc, dữ liệu cục bộ, file bí mật và lịch sử Git. Lệnh này cần Git được cài trên máy và chạy trong repository hiện tại.
+
+Mở terminal tại thư mục vừa xuất, rồi dùng repository GitHub trống của bạn:
+
+```bash
+git init -b main
+git add .
+git commit -m "Initial wedding website"
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+git push -u origin main
+```
+
+Thay YOUR_USERNAME và YOUR_REPOSITORY bằng thông tin của bạn. Lịch sử của repository hiện tại được giữ nguyên.
+
+## Deploy lên Vercel
+
+Đã có **vercel.json** với preset Next.js, lệnh cài **npm ci** và lệnh build **npm run build**. Phiên bản Node.js được cố định ở nhánh **22.x**. Xem [cấu hình Vercel](https://vercel.com/docs/project-configuration/vercel-json) và [phiên bản Node.js được hỗ trợ](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions).
+
+1. Push mã nguồn lên GitHub.
+2. Trong Vercel, chọn **Add New → Project**, import repository đó.
+3. Dùng **Framework Preset: Next.js**, **Root Directory: ./**; giữ Output Directory mặc định của framework.
+4. Thêm các biến môi trường của sổ lời chúc theo phần **Lưu lời chúc** bên dưới. Trên Vercel cần **SUPABASE_URL** và **SUPABASE_SERVICE_ROLE_KEY** để khách gửi lời chúc được lưu lâu dài.
+5. Chọn **Deploy**. Website dùng tài nguyên có sẵn trong public/; thư viện và bản build được tạo trên Vercel.
+6. Sau khi có tên miền thật, đặt **NEXT_PUBLIC_SITE_URL** thành URL HTTPS của website và redeploy để ảnh xem trước khi chia sẻ dùng đúng địa chỉ.
+
+**Không đặt NEXT_DIST_DIR trên Vercel**. Mã nguồn tự dùng .next khi chạy trên Vercel. NEXT_DIST_DIR dành cho build kiểm thử tại máy.
+
+**.vercelignore** loại cache, thư viện tại máy, ảnh gốc và file kiểm thử khỏi gói upload qua Vercel CLI, theo [tài liệu .vercelignore](https://vercel.com/docs/deployments/vercel-ignore). Khi triển khai từ GitHub, .gitignore cùng trạng thái file đã được theo dõi quyết định nội dung repository.
 
 ## Nội dung
 
@@ -34,13 +97,15 @@ Chỉnh thông tin ngày, tên, ảnh và tọa độ tại **lib/wedding.ts**; 
 
 ## Ảnh, QR và nhạc
 
-Thư mục gốc thực tế của repository là **resources/**. File dùng trên web nằm ở **public/media/**, đã được tạo sẵn và cần đưa vào Git khi triển khai.
+Tài nguyên gốc lưu cục bộ tại **resources/** và được bỏ qua trong Git. File dùng trên web nằm ở **public/media/**, đã được tạo sẵn và cần đưa vào Git khi triển khai.
 
-Khi thay ảnh, QR hoặc nhạc nguồn, chạy:
+Khi thay ảnh, QR hoặc nhạc nguồn, đặt lại file gốc vào resources/images, resources/qr và resources/sound trên máy, rồi chạy:
 
 ```bash
 npm run assets
 ```
+
+Sau đó commit các file public/media/ đã cập nhật. Khi clone repository mới hoặc deploy Vercel, dùng trực tiếp public/media/ có sẵn.
 
 Script tạo ảnh WebP tối đa 1600 × 2000 px, tự xoay theo EXIF và loại metadata máy ảnh; QR giữ PNG không mất dữ liệu. Nhạc được sao chép nguyên bản. Ảnh gốc khoảng 78 MB, bộ WebP khoảng 1,4 MB; ảnh trên trang tiếp tục được tối ưu bởi next/image. Script không sửa ảnh gốc.
 

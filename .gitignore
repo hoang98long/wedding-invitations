@@ -1,11 +1,37 @@
-node_modules
+# Installed dependencies and package-manager caches
+node_modules/
+.npm/
+.pnpm-store/
+
+# Generated builds, Next.js types, and hosting state
 .next/
+out/
+dist/
+build/
+.vercel/
+.turbo/
+next-env.d.ts
+*.tsbuildinfo
+
+# Local tools, original media, and guestbook data
 .local/
+resources/
 data/
+
+# Secrets: commit the empty configuration template only
 .env*
 !.env.example
-*.tsbuildinfo
-*-dev*.log
+
+# Logs and test output
+*.log
+coverage/
 test-results/
 playwright-report/
-/.next/cache
+playwright/.cache/
+
+# Editor and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
