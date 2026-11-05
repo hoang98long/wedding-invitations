@@ -1,34 +1,25 @@
-import type { Metadata } from "next";
-
+﻿import type { Metadata } from "next";
+import "./fonts.css";
 import "./globals.css";
 
+const title = "Thiệp cưới Hoàng Long & Hà Thanh | 28, 29-11-2026";
+const description = "Trân trọng kính mời bạn đến chung vui cùng Hoàng Long và Hà Thanh, ngày 28 & 29 tháng 11 năm 2026 tại Hải Phòng.";
+
 export const metadata: Metadata = {
-  title: "Hoàng Long & Hà Thanh Wedding",
-  description:
-    "Official wedding invitation website of Hoàng Long and Hà Thanh.",
+  title,
+  description,
+  ...(process.env.NEXT_PUBLIC_SITE_URL ? { metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL) } : {}),
   openGraph: {
-    title: "Hoàng Long & Hà Thanh Wedding",
-    description:
-      "Official wedding invitation website of Hoàng Long and Hà Thanh.",
+    title,
+    description,
     type: "website",
     locale: "vi_VN",
-    images: [
-      {
-        url: "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&w=1600&q=80",
-        width: 1600,
-        height: 1067,
-        alt: "Hoàng Long and Hà Thanh wedding invitation"
-      }
-    ]
+    ...(process.env.NEXT_PUBLIC_SITE_URL ? { images: [{ url: "/media/images/LMC_0129.webp", width: 1332, height: 2000, alt: "Thiệp cưới Hoàng Long và Hà Thanh" }] } : {})
   },
-  metadataBase: new URL("https://wedding-invitations.vercel.app")
+  formatDetection: { telephone: false, email: false, address: false, date: false }
 };
 
-export default function RootLayout({
-  children
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="vi">
       <body>{children}</body>

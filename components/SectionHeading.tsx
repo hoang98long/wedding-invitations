@@ -1,54 +1,17 @@
-"use client";
-
-import { motion } from "framer-motion";
-
-import { fadeUp, smoothTransition, viewportOnce } from "@/lib/animations";
+﻿import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type SectionHeadingProps = {
-  eyebrow: string;
-  title: string;
-  subtitle?: string;
-  light?: boolean;
-};
+type SectionHeadingProps = { eyebrow: string; title: string; subtitle?: string; light?: boolean };
 
-export function SectionHeading({
-  eyebrow,
-  title,
-  subtitle,
-  light
-}: SectionHeadingProps) {
+export function SectionHeading({ eyebrow, title, subtitle, light }: SectionHeadingProps) {
   return (
-    <motion.div
-      className={cn("mx-auto mb-12 max-w-2xl text-center", light && "text-white")}
-      initial="hidden"
-      whileInView="visible"
-      viewport={viewportOnce}
-      variants={fadeUp}
-      transition={smoothTransition}
-    >
-      <p
-        className={cn(
-          "mb-3 text-xs font-semibold uppercase tracking-[0.34em] text-gold",
-          light && "text-champagne"
-        )}
-      >
-        {eyebrow}
-      </p>
-      <div className="gold-divider mx-auto mb-5" />
-      <h2 className="font-heading text-4xl leading-tight text-charcoal md:text-6xl">
-        {title}
-      </h2>
-      {subtitle ? (
-        <p
-          className={cn(
-            "mx-auto mt-5 max-w-xl text-sm leading-7 text-charcoal/70 md:text-base",
-            light && "text-white/72"
-          )}
-        >
-          {subtitle}
-        </p>
-      ) : null}
-    </motion.div>
+    <div className={cn("mx-auto mb-10 max-w-2xl text-center md:mb-14", light && "text-white")}>
+      <p className={cn("eyebrow", light && "text-champagne")}>{eyebrow}</p>
+      <div aria-hidden="true" className="my-5 flex items-center justify-center gap-3 text-gold">
+        <span className="gold-divider" /><Heart className="h-3 w-3" /><span className="gold-divider" />
+      </div>
+      <h2 className="font-heading text-[clamp(2rem,4.3vw,3.6rem)] leading-[1.3] tracking-[-0.025em]">{title}</h2>
+      {subtitle && <p className={cn("mx-auto mt-5 max-w-xl text-sm leading-7 text-charcoal/70 md:text-base", light && "text-white/75")}>{subtitle}</p>}
+    </div>
   );
 }

@@ -1,117 +1,61 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
-
+import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { SectionHeading } from "@/components/SectionHeading";
-import {
-  scaleIn,
-  smoothTransition,
-  staggerContainer,
-  viewportOnce
-} from "@/lib/animations";
-import { Button } from "@/components/ui/button";
-
-const images = [
-  "photo-1522673607200-164d1b6ce486",
-  "photo-1519741497674-611481863552",
-  "photo-1511285560929-80b456fea0bc",
-  "photo-1520854221256-17451cc331bf",
-  "photo-1509610973147-232dfea52a97",
-  "photo-1532712938310-34cb3982ef74",
-  "photo-1469371670807-013ccf25f16a",
-  "photo-1529634806980-85c3dd6d34ac"
-].map((id, index) => ({
-  src: `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1100&q=80`,
-  alt: `Wedding gallery moment ${index + 1}`,
-  tall: index === 1 || index === 4 || index === 6
-}));
+import { weddingPhotos } from "@/lib/wedding";
 
 export function GallerySection() {
-  const [active, setActive] = useState<(typeof images)[number] | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const isOpen = activeIndex !== null;
+  const active = activeIndex === null ? null : weddingPhotos[activeIndex];
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog || !isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialog.showModal();
+    return () => {
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
+  function move(step: number) {
+    setActiveIndex(index => index === null ? null : (index + step + weddingPhotos.length) % weddingPhotos.length);
+  }
 
   return (
-    <section id="gallery" className="bg-ivory py-20 md:py-28">
+    <section id="gallery" className="section-space bg-ivory">
       <div className="section-shell">
-        <SectionHeading
-          eyebrow="Gallery"
-          title="Moments in champagne light"
-          subtitle="A curated glimpse into the romance, tenderness, and quiet joy surrounding the celebration."
-        />
-
-        <motion.div
-          className="columns-1 gap-4 sm:columns-2 lg:columns-3"
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
-          variants={staggerContainer}
-        >
-          {images.map((image) => (
-            <motion.button
-              key={image.src}
-              type="button"
-              aria-label={`Open ${image.alt}`}
-              onClick={() => setActive(image)}
-              variants={scaleIn}
-              transition={smoothTransition}
-              className="group mb-4 block w-full overflow-hidden rounded-lg bg-champagne shadow-luxe"
-            >
-              <span className="relative block w-full" style={{ height: image.tall ? 470 : 320 }}>
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  loading="lazy"
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="object-cover transition duration-700 group-hover:scale-105"
-                />
-                <span className="absolute inset-0 bg-charcoal/0 transition duration-500 group-hover:bg-charcoal/18" />
-              </span>
-            </motion.button>
+        <SectionHeading eyebrow="Những khung hình thương nhớ" title="Giữa muôn vàn khoảnh khắc, mình chọn có nhau" subtitle="Mai này khi nhìn lại, điều đẹp nhất trong mỗi khung hình vẫn là nụ cười của người bên cạnh." />
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+          {weddingPhotos.map((photo, index) => (
+            <button key={photo.file} type="button" aria-label={`Xem ảnh cưới ${index + 1}: ${photo.alt}`} onClick={() => setActiveIndex(index)} className="group relative block aspect-[3/4] w-full overflow-hidden bg-champagne text-white">
+              <Image src={`/media/images/${photo.file}.webp`} alt={photo.alt} fill sizes="(min-width: 1200px) 360px, (min-width: 1024px) 31vw, 47vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.035] group-focus-visible:scale-[1.035]" loading="lazy" />
+              <span aria-hidden="true" className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full border border-white/60 bg-charcoal/30 backdrop-blur-sm sm:bottom-4 sm:right-4"><Expand className="h-3.5 w-3.5" /></span>
+            </button>
           ))}
-        </motion.div>
+        </div>
+        <p className="mt-5 text-center text-xs text-charcoal/60">Chạm vào ảnh để ngắm trọn khoảnh khắc.</p>
       </div>
-
-      <AnimatePresence>
-        {active ? (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/88 p-4 backdrop-blur"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setActive(null)}
-          >
-            <Button
-              type="button"
-              aria-label="Close gallery preview"
-              variant="outline"
-              size="sm"
-              className="absolute right-4 top-4 h-11 w-11 rounded-full p-0"
-              onClick={() => setActive(null)}
-            >
-              <X className="h-5 w-5" />
-            </Button>
-            <motion.div
-              className="relative h-[78vh] w-full max-w-5xl overflow-hidden rounded-lg"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.35 }}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <Image
-                src={active.src}
-                alt={active.alt}
-                fill
-                sizes="90vw"
-                className="object-contain"
-              />
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      <dialog ref={dialogRef} aria-label="Album ảnh cưới Hoàng Long và Hà Thanh" onClose={() => setActiveIndex(null)} onClick={event => { if (event.target === event.currentTarget) setActiveIndex(null); }} onKeyDown={event => {
+        if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
+        if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
+      }} className="gallery-dialog">
+        <button type="button" autoFocus aria-label="Đóng ảnh" onClick={() => setActiveIndex(null)} className="absolute right-3 top-3 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/30 text-white hover:bg-black/60 sm:right-6 sm:top-6"><X aria-hidden="true" className="h-6 w-6" /></button>
+        {active && <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center gap-3 px-12 py-20 sm:px-20">
+          <div className="relative min-h-0 w-full max-w-5xl flex-1">
+            <Image src={`/media/images/${active.file}.webp`} alt={active.alt} fill sizes="(min-width: 1200px) 1000px, 90vw" className="object-contain" />
+          </div>
+          <p className="max-w-xl text-center text-xs leading-6 text-white/80" aria-live="polite">{(activeIndex ?? 0) + 1} / {weddingPhotos.length} · {active.alt}</p>
+        </div>}
+        <button type="button" aria-label="Ảnh trước" onClick={() => move(-1)} className="absolute left-0 top-1/2 z-10 flex h-14 w-12 -translate-y-1/2 items-center justify-center rounded-full text-white hover:bg-white/10 sm:left-4"><ChevronLeft aria-hidden="true" className="h-8 w-8" /></button>
+        <button type="button" aria-label="Ảnh tiếp theo" onClick={() => move(1)} className="absolute right-0 top-1/2 z-10 flex h-14 w-12 -translate-y-1/2 items-center justify-center rounded-full text-white hover:bg-white/10 sm:right-4"><ChevronRight aria-hidden="true" className="h-8 w-8" /></button>
+      </dialog>
     </section>
   );
 }
