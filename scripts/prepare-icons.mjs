@@ -2,8 +2,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
-// Keep every browser icon in sync with the editable, font-independent SVG.
-const source = await readFile(new URL("../app/icon.svg", import.meta.url));
+// Keep every browser icon in sync with the image supplied by the couple.
+const source = await readFile(new URL("../app/icon.png", import.meta.url));
 const sizes = [16, 32, 48, 64];
 const images = await Promise.all(sizes.map(size => sharp(source).resize(size, size).png().toBuffer()));
 const directory = Buffer.alloc(6 + sizes.length * 16);

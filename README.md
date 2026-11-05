@@ -113,7 +113,7 @@ Font Inter và Playfair Display được lưu tại **public/fonts/**, có đầ
 
 Ảnh **public/media/backgrounds/beige-floral-continuous.webp** tạo một nền hoa màu be chung, cố định phía sau toàn bộ nội dung khi cuộn. Các phần nội dung dùng nền trong suốt, nên hoa lá không bị cắt hoặc khởi động lại ở ranh giới mỗi phần; các thẻ và QR có nền ngà để dễ đọc. Xem [file ảnh và prompt tạo ảnh](docs/backgrounds.md).
 
-Biểu tượng tab **L&T** dùng nền be, chữ xanh trầm và dấu & vàng champagne. Bản vector nằm ở **app/icon.svg**; chữ đã chuyển thành đường nét nên không phụ thuộc font trên thiết bị. Next.js tự gắn **app/favicon.ico** (16, 32, 48, 64 px) và **app/apple-icon.png** (180 px) vào trang. Khi sửa SVG, chạy `npm run icons` để cập nhật các bản PNG/ICO trước khi commit và deploy.
+Biểu tượng tab dùng **đúng ảnh LT do cô dâu, chú rể cung cấp**, giữ thiết kế chữ đen lồng nhau, nền be và viền vàng. Ảnh được thu nhỏ thành **app/icon.png** (512 px) để dùng trên web. Next.js tự gắn ảnh này cùng **app/favicon.ico** (16, 32, 48, 64 px) và **app/apple-icon.png** (180 px) vào trang. Khi thay ảnh PNG, chạy `npm run icons` để cập nhật các bản ICO và biểu tượng điện thoại trước khi commit và deploy.
 
 ## Lưu lời chúc
 
