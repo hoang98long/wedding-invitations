@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "assets": "node scripts/prepare-assets.mjs",
+    "icons": "node scripts/prepare-icons.mjs",
     "typecheck": "next typegen && tsc --noEmit",
     "export:source": "node scripts/export-source.mjs",
     "test:e2e": "playwright test",
