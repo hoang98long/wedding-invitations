@@ -13,7 +13,7 @@ export function HeroSection() {
           <a className="nav-link" href="#wedding-info">Lễ cưới</a>
           <a className="nav-link" href="#gallery">Ảnh cưới</a>
           <a className="nav-link" href="#guestbook">Lời chúc</a>
-          <a className="nav-link hidden sm:inline" href="#gifts">Mừng cưới</a>
+          <a className="nav-link hidden sm:inline-flex" href="#gifts">Mừng cưới</a>
         </div>
       </nav>
       <div className="section-shell grid items-center gap-10 pb-12 pt-12 md:min-h-[760px] md:grid-cols-[1.1fr_1fr] md:gap-12 md:py-16 lg:gap-20">
