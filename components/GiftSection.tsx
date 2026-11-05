@@ -34,7 +34,7 @@ export function GiftSection() {
   }
 
   return (
-    <section id="gifts" className="section-space section-backdrop section-backdrop--sage">
+    <section id="gifts" className="section-space">
       <div className="section-shell">
         <SectionHeading eyebrow="Hộp mừng cưới" title="Gửi chút yêu thương" subtitle="Bạn đến chung vui đã là món quà quý giá. Nếu muốn gửi thêm một chút yêu thương, chúng mình xin nhận bằng tất cả sự trân trọng." />
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-3 sm:gap-6">

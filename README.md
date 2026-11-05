@@ -1,6 +1,6 @@
 ﻿# Thiệp cưới Hoàng Long & Hà Thanh
 
-Website thiệp cưới tiếng Việt bằng Next.js 15, React 19, TypeScript và Tailwind CSS. Giao diện màu ngà, xanh olive và vàng champagne, tối ưu cho điện thoại và máy tính.
+Website thiệp cưới tiếng Việt bằng Next.js 15, React 19, TypeScript và Tailwind CSS. Giao diện có một nền xanh sage xuyên suốt, thẻ nội dung màu ngà và điểm nhấn vàng champagne, tối ưu cho điện thoại và máy tính.
 
 ## Chạy tại máy
 
@@ -80,7 +80,7 @@ Thay YOUR_USERNAME và YOUR_REPOSITORY bằng thông tin của bạn. Lịch s�
 
 - Ngày đầu trang: **28, 29-11-2026**.
 - Chú rể: **16h00, thứ Bảy 28/11/2026**, Tân Kỳ, Hải Phòng. Địa điểm: **AN KIDS - Siêu thị Mẹ và Bé**, tọa độ **20.8152004, 106.3205681**.
-- Cô dâu: **09h00, Chủ Nhật 29/11/2026**, Chí Minh, Hải Phòng. Địa điểm: **Nhà văn hóa thôn Gia Lộc**, tọa độ **20.8066873, 106.4282514**.
+- Cô dâu có hai mốc: **Lễ Ăn hỏi — 16h00, thứ Bảy 28/11/2026** và **Lễ đón dâu — 09h00, Chủ Nhật 29/11/2026**, tại Chí Minh, Hải Phòng. Địa điểm chung: **Nhà văn hóa thôn Gia Lộc**, tọa độ **20.8066873, 106.4282514**.
 - Mỗi bên có bản đồ và liên kết Google Maps chỉ đường theo đúng tọa độ trong liên kết đã cung cấp. Liên kết HTTPS dùng được trên Android, iOS và máy tính.
 - Bộ đếm hướng tới lễ cưới đầu tiên, **28/11/2026 lúc 16h00 (UTC+7)**. Lần render máy chủ và trình duyệt đều dùng placeholder; chỉ đọc thời gian trong effect, tránh lỗi hydration. Hết thời gian sẽ dừng ở 0.
 - Album chọn 6 ảnh thật, bố cục 2 cột trên điện thoại và 3 cột trên màn hình lớn; chạm để xem ảnh đầy đủ. Hỗ trợ phím mũi tên, Escape và điều hướng bàn phím.
@@ -111,7 +111,7 @@ Script tạo ảnh WebP tối đa 1600 × 2000 px, tự xoay theo EXIF và loạ
 
 Font Inter và Playfair Display được lưu tại **public/fonts/**, có đầy đủ ký tự tiếng Việt và giấy phép OFL đi kèm. Website không cần tải font từ Google khi khách mở thiệp.
 
-Ba nền ảnh lá xanh sage, hoa hồng/peony màu ngà và xanh rừng được lưu tại **public/media/backgrounds/**, tổng khoảng 137 KB. Xem [bố trí, file ảnh và prompt tạo ảnh](docs/backgrounds.md). Các lớp nền được căn riêng cho điện thoại để giữ nội dung và QR rõ ràng.
+Ảnh **public/media/backgrounds/sage-continuous.webp** tạo một nền sage chung, cố định phía sau toàn bộ nội dung khi cuộn. Các phần nội dung dùng nền trong suốt, nên hoa lá không bị cắt hoặc khởi động lại ở ranh giới mỗi phần; các thẻ và QR có nền ngà để dễ đọc. Xem [file ảnh và prompt tạo ảnh](docs/backgrounds.md).
 
 ## Lưu lời chúc
 

@@ -10,10 +10,15 @@ export const ceremonies = [
   {
     side: "Chú rể",
     name: "Hoàng Long",
-    date: "28/11/2026",
-    weekday: "Thứ Bảy",
-    time: "16h00",
-    dateTime: "2026-11-28T16:00:00+07:00",
+    events: [
+      {
+        title: "Lễ cưới",
+        date: "28/11/2026",
+        weekday: "Thứ Bảy",
+        time: "16h00",
+        dateTime: "2026-11-28T16:00:00+07:00"
+      }
+    ],
     area: "Tân Kỳ, Hải Phòng",
     venue: "AN KIDS - Siêu thị Mẹ và Bé",
     // !3d / !4d from the supplied place URL, rather than the map viewport center.
@@ -23,10 +28,22 @@ export const ceremonies = [
   {
     side: "Cô dâu",
     name: "Hà Thanh",
-    date: "29/11/2026",
-    weekday: "Chủ Nhật",
-    time: "09h00",
-    dateTime: "2026-11-29T09:00:00+07:00",
+    events: [
+      {
+        title: "Lễ Ăn hỏi",
+        date: "28/11/2026",
+        weekday: "Thứ Bảy",
+        time: "16h00",
+        dateTime: "2026-11-28T16:00:00+07:00"
+      },
+      {
+        title: "Lễ đón dâu",
+        date: "29/11/2026",
+        weekday: "Chủ Nhật",
+        time: "09h00",
+        dateTime: "2026-11-29T09:00:00+07:00"
+      }
+    ],
     area: "Chí Minh, Hải Phòng",
     venue: "Nhà văn hóa thôn Gia Lộc",
     coordinates: "20.8066873,106.4282514",

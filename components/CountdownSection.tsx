@@ -23,7 +23,7 @@ export function CountdownSection() {
 
   const hasStarted = timeLeft !== null && timeLeft.every(value => value === 0);
   return (
-    <section id="countdown" className="section-space section-backdrop section-backdrop--sage border-y border-gold/15">
+    <section id="countdown" className="section-space">
       <div className="section-shell">
         <SectionHeading eyebrow="Đếm ngược đến ngày chung đôi" title={hasStarted ? "Ngày hạnh phúc đã đến" : "Đếm từng khoảnh khắc, chờ ngày có nhau"} subtitle="Hẹn gặp bạn lúc 16h00, ngày 28 tháng 11 năm 2026 — khi niềm vui được sẻ chia và yêu thương thêm trọn vẹn." />
         <div role="timer" aria-label="Thời gian còn lại đến lễ cưới" aria-live="off" className="mx-auto grid max-w-3xl grid-cols-4 gap-2 sm:gap-5">

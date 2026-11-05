@@ -89,7 +89,7 @@ export function GuestbookSection() {
   }
 
   return (
-    <section id="guestbook" className="section-space section-backdrop section-backdrop--roses">
+    <section id="guestbook" className="section-space">
       <div className="section-shell">
         <SectionHeading eyebrow="Lưu lại một lời yêu thương" title="Lời chúc gửi chúng mình" subtitle="Một lời chúc nhỏ, một niềm vui thật lớn. Cảm ơn bạn đã cùng chúng mình lưu giữ những điều dịu dàng trong ngày chung đôi." />
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">

@@ -26,6 +26,15 @@ test("stable hydration with a different client clock, correct dates, maps and re
   await expect(page.locator("#wedding-info")).toContainText("29/11/2026");
   await expect(page.locator("#wedding-info")).toContainText("16h00");
   await expect(page.locator("#wedding-info")).toContainText("09h00");
+  const bride = page.getByRole("article", { name: "Lịch lễ cô dâu", exact: true });
+  await expect(bride).toContainText("Lễ Ăn hỏi");
+  await expect(bride).toContainText("Lễ đón dâu");
+  await expect(bride.locator("time")).toHaveCount(2);
+  await expect(bride.locator("time").nth(0)).toHaveAttribute("datetime", "2026-11-28T16:00:00+07:00");
+  await expect(bride.locator("time").nth(0)).toContainText("16h00");
+  await expect(bride.locator("time").nth(1)).toHaveAttribute("datetime", "2026-11-29T09:00:00+07:00");
+  await expect(bride.locator("time").nth(1)).toContainText("09h00");
+  await expect(page.getByRole("article", { name: "Lịch lễ chú rể", exact: true }).locator("time")).toHaveCount(1);
   await expect(page.getByRole("link", { name: "Chỉ đường đến lễ cưới bên chú rể" })).toHaveAttribute("href", /destination=20\.8152004%2C106\.3205681/);
   await expect(page.getByRole("link", { name: "Chỉ đường đến lễ cưới bên cô dâu" })).toHaveAttribute("href", /destination=20\.8066873%2C106\.4282514/);
   expect(await page.locator("a[href*=rsvp]").count()).toBe(0);
@@ -44,14 +53,25 @@ test("stable hydration with a different client clock, correct dates, maps and re
     expect(cards[0].height).toBeCloseTo(cards[1].height, 0);
   }
   await page.setViewportSize(testInfo.project.name === "mobile" ? { width: 390, height: 844 } : { width: 1440, height: 1000 });
-  for (const name of ["sage-botanical", "ivory-roses", "forest-garden"]) {
-    const background = await page.request.get(`/media/backgrounds/${name}.webp`);
-    expect(background.status()).toBe(200);
-    expect(background.headers()["content-type"]).toContain("image/webp");
+  const background = await page.request.get("/media/backgrounds/sage-continuous.webp");
+  expect(background.status()).toBe(200);
+  expect(background.headers()["content-type"]).toContain("image/webp");
+  await expect(page.locator(".page-backdrop")).toHaveCount(1);
+  expect(await page.locator(".page-backdrop").evaluate(element => getComputedStyle(element).position)).toBe("fixed");
+  const sectionBackgrounds = await page.locator("main > section, main > footer").evaluateAll(elements => elements.map(element => {
+    const style = getComputedStyle(element);
+    return { color: style.backgroundColor, image: style.backgroundImage, beforeImage: getComputedStyle(element, "::before").backgroundImage };
+  }));
+  expect(sectionBackgrounds.every(section => section.color === "rgba(0, 0, 0, 0)" && section.image === "none" && section.beforeImage === "none")).toBe(true);
+  for (const section of ["hero", "countdown", "wedding-info", "guestbook", "gifts"]) {
+    await page.locator(`#${section}`).scrollIntoViewIfNeeded();
+    // Capture the viewport: a full-element capture can crop fixed artwork at viewport edges.
+    await page.screenshot({ path: `.local/qa/${testInfo.project.name}-${section}-background.png` });
   }
-  for (const section of ["hero", "countdown", "guestbook", "gifts"]) {
-    await page.locator(`#${section}`).screenshot({ path: `.local/qa/${testInfo.project.name}-${section}-background.png` });
-  }
+  const heroBottom = await page.locator("#hero").evaluate(element => element.getBoundingClientRect().bottom + window.scrollY);
+  await page.evaluate(y => window.scrollTo(0, y), heroBottom - 350);
+  expect(await page.locator(".page-backdrop").evaluate(element => element.getBoundingClientRect().top)).toBe(0);
+  await page.screenshot({ path: `.local/qa/${testInfo.project.name}-continuous-background.png` });
   // Trigger lazy images before checking they decode successfully.
   await page.locator("#gallery").scrollIntoViewIfNeeded();
   await page.locator("#gifts").scrollIntoViewIfNeeded();
@@ -59,8 +79,8 @@ test("stable hydration with a different client clock, correct dates, maps and re
   const qr = await page.locator("#gifts img").first().getAttribute("src");
   expect(qr).toBe("/media/qr/QR_groom.png");
   await page.screenshot({ path: `.local/qa/${testInfo.project.name}-gifts.png`, fullPage: false });
-  await page.locator("#hero").scrollIntoViewIfNeeded();
-  await page.screenshot({ path: `.local/qa/${testInfo.project.name}-page.png`, fullPage: true });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.screenshot({ path: `.local/qa/${testInfo.project.name}-page.png` });
   expect(errors).toEqual([]);
 });
 

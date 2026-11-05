@@ -9,7 +9,8 @@ import { WeddingInfoSection } from "@/components/WeddingInfoSection";
 
 export default function Home() {
   return (
-    <main className="overflow-hidden bg-ivory">
+    <main className="wedding-page overflow-hidden">
+      <div className="page-backdrop" aria-hidden="true" />
       <HeroSection />
       <CountdownSection />
       <GallerySection />

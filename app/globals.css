@@ -37,7 +37,7 @@ html {
 
 body {
   min-height: 100vh;
-  background: #faf8f4;
+  background: #dfe8d7;
   color: #2a2a2a;
   font-family: var(--font-inter), Arial, sans-serif;
   text-rendering: optimizeLegibility;
@@ -85,91 +85,34 @@ section[id] {
   scroll-margin-top: 20px;
 }
 
-.section-backdrop {
+.wedding-page {
   position: relative;
   isolation: isolate;
-  background-color: var(--section-color, #eef1e9);
+  background-color: #dfe8d7;
 }
 
-.section-backdrop::before,
-.section-backdrop::after {
-  content: "";
-  position: absolute;
+.page-backdrop {
+  position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
-}
-
-.section-backdrop::before {
-  background-image: var(--section-image);
+  background-color: #dfe8d7;
+  background-image: url("/media/backgrounds/sage-continuous.webp");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
-  opacity: 0.88;
 }
 
-.section-backdrop::after {
-  background: linear-gradient(90deg, transparent, rgb(250 248 244 / 30%) 35%, rgb(250 248 244 / 30%) 65%, transparent);
-}
-
-.section-backdrop--sage {
-  --section-color: #e8eddf;
-  --section-image: url("/media/backgrounds/sage-botanical.webp");
-}
-
-.section-backdrop--roses {
-  --section-color: #faf4ee;
-  --section-image: url("/media/backgrounds/ivory-roses.webp");
-}
-
-.section-backdrop--hero {
-  --section-color: #faf7f1;
-}
-
-.section-backdrop--hero::before {
-  opacity: 0.76;
-}
-
-.section-backdrop--hero::after {
-  background: linear-gradient(90deg, rgb(250 248 244 / 60%), rgb(250 248 244 / 36%) 50%, rgb(250 248 244 / 12%));
-}
-
-.section-backdrop--forest {
-  --section-color: #263e32;
-  --section-image: url("/media/backgrounds/forest-garden.webp");
-}
-
-.section-backdrop--forest::after {
-  background: rgb(16 37 26 / 38%);
+.page-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgb(239 244 233 / 42%), rgb(239 244 233 / 12%) 72%);
 }
 
 .wedding-paper {
   background: rgb(250 248 244 / 96%);
   box-shadow: 0 12px 40px rgb(38 62 50 / 5%);
-}
-
-@media (max-width: 767px) {
-  .section-backdrop::before {
-    background-image: var(--section-image), var(--section-image);
-    background-size: auto 300px;
-    background-position: left top, right bottom;
-    mask-image: linear-gradient(to bottom, black, transparent 300px, transparent calc(100% - 300px), black);
-  }
-
-  .section-backdrop--forest::before {
-    background-image: var(--section-image);
-    background-size: cover;
-    background-position: center;
-    mask-image: none;
-  }
-
-  .section-backdrop--roses::before {
-    background-position: right top, left bottom;
-  }
-
-  .section-backdrop--hero::after {
-    background: linear-gradient(to bottom, rgb(250 248 244 / 30%), rgb(250 248 244 / 55%) 45%, rgb(250 248 244 / 12%));
-  }
 }
 
 :focus-visible {

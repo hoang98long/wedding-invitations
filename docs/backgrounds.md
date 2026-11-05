@@ -1,23 +1,13 @@
-# Bộ nền xanh và hoa cho thiệp cưới
+﻿# Một nền sage xuyên suốt trang cưới
 
-Ba ảnh được tạo bằng công cụ imagegen tích hợp, rồi chuyển sang WebP rộng tối đa 1600 px để đưa vào website. Không dùng CLI tạo ảnh. Tổng dung lượng khoảng 137 KB. Tất cả file dùng trên web nằm trong public/, được đưa lên GitHub/Vercel.
+Ảnh đang dùng: [sage-continuous.webp](../public/media/backgrounds/sage-continuous.webp).
 
-| File đã lưu | Sử dụng |
-| --- | --- |
-| [sage-botanical.webp](../public/media/backgrounds/sage-botanical.webp) | Bộ đếm, lịch cưới hai bên và mừng cưới |
-| [ivory-roses.webp](../public/media/backgrounds/ivory-roses.webp) | Trang mở đầu, biểu mẫu và sổ lời chúc |
-| [forest-garden.webp](../public/media/backgrounds/forest-garden.webp) | Chân trang cảm ơn |
+Ảnh được tạo bằng công cụ imagegen tích hợp, sau đó chuyển sang WebP để dùng trong dự án. Đây là một ảnh vuông duy nhất với nền giấy sage và hoa lá nhẹ hai bên, vùng giữa thoáng cho chữ và ảnh cưới.
 
-Trang mở đầu dùng nền hoa màu ngà với lớp phủ sáng dịu sau chữ; album giữ nền ngà để làm nổi ảnh thật. Trên điện thoại, họa tiết nền sáng được đặt ở hai góc và làm mờ dần, với hoa ngà ở góc trên phải và dưới trái; thẻ thông tin, biểu mẫu và QR có lớp nền ngà gần như đục để dễ đọc. Nền không cố định khi cuộn.
+Nền được đặt một lần tại **app/page.tsx**, qua lớp **.page-backdrop** trong **app/globals.css**. Lớp nền cố định theo khung nhìn khi cuộn; các section và chân trang trong suốt nên không xuất hiện ranh giới giữa các ảnh nền riêng. Thẻ thông tin, biểu mẫu và QR dùng màu ngà gần như đục để dễ đọc. Trên điện thoại và máy tính, ảnh dùng cover và giữ đúng tỉ lệ; giao diện không cần JavaScript theo dõi thao tác cuộn.
 
-## Prompt 1 — sage-botanical
+Các ảnh nền cũ vẫn được lưu trong public/media/backgrounds/ nhưng không được giao diện tải hoặc sử dụng.
 
-Use case: stylized-concept. Asset type: full-bleed landscape background image for an elegant Vietnamese wedding invitation website, not a UI mockup. Create a refined fine-art botanical watercolor backdrop, wide landscape composition, soft pale sage green washed handmade paper background (#e5ebe1), delicate eucalyptus and olive foliage with tiny ivory blossoms gathered only around the upper-left and lower-right outer edges. Misty soft leaf shadows at the sides, subtly luminous pale green center. The central 65% of the canvas must be almost empty, calm, very light, suitable behind dark text and invitation cards. Muted natural sage/olive greens, warm ivory, extremely subtle champagne hints, romantic and understated rather than tropical. Fine organic texture, premium stationery photography meets soft watercolor. No people, no objects in the center, no text, no lettering, no logos, no border frames, no watermark. This must be one continuous background artwork, no collage or separate panels.
+## Prompt đã dùng
 
-## Prompt 2 — ivory-roses
-
-Use case: stylized-concept. Asset type: wide landscape decorative background artwork for the guestbook and wedding gift sections of a refined Vietnamese wedding website. A romantic botanical watercolor on warm ivory handmade paper, airy softly painted ivory garden roses and a few pale blush peonies, eucalyptus leaves in muted sage, tiny champagne gold accents, translucent soft silk-like light. Floral arrangement lives only at the lower-left outer corner and upper-right outer corner; center 70% nearly blank, uniform warm ivory (#faf8f4) with extremely subtle soft paper grain, suitable for dark readable typography and form cards. Premium contemporary wedding stationery, painterly yet natural, delicate and luminous, restrained palette of ivory, dusty blush and sage green. Continuous wide background image, no frame, no panels, no people, no text, no letters, no monograms, no watermark.
-
-## Prompt 3 — forest-garden
-
-Use case: stylized-concept. Asset type: landscape footer background artwork for an elegant Vietnamese wedding website. Refined fine-art botanical watercolor on deep forest green textured paper (#263e32), subtle soft olive and eucalyptus foliage only along the far left and far right edges, a few small ivory white garden roses near the outer corners, restrained muted champagne accents. Very dark calm spacious central 70% with gentle painterly color depth, suitable behind centered cream wedding thank-you typography. Sophisticated romantic evening garden mood, premium artisan wedding stationery, balanced composition, subtle organic texture, not busy. Wide single continuous image. No lettering, no text, no people, no candles, no frames, no collage, no logos, no watermark.
+Use case: stylized-concept. Asset type: a SINGLE continuous sage-green botanical wallpaper used as one fixed background behind an entire romantic Vietnamese wedding invitation website, never as separate section banners. Create ONE SQUARE high-resolution artwork. Soft authentic sage green (#dfe8d7) is the dominant color everywhere, with an even, softly mottled watercolor handmade-paper surface. Airy asymmetrical eucalyptus, slender olive stems and a few delicate ivory jasmine blossoms / ivory garden roses drift naturally along both side areas, with some restrained foliage extending towards the outer thirds so gentle botanical details remain visible when the square is cropped to portrait or landscape. Place botanical details around the middle portions of the sides as well as near corners so cropping will not erase all of them. Keep the middle 50–60% spacious, pale sage, low contrast, visually calm enough behind dark headings and invitation cards. Fine-art romantic watercolor, premium artisan wedding stationery, softly diffused daylight, subdued dusty greens and ivory only. Unified continuous color, not an ivory canvas, no abrupt color bands, no rectangles, no framing lines, no panels or grids, no text, no letters, no logos, no people, no watermark. The single wallpaper must feel elegant and visually connected during scrolling.

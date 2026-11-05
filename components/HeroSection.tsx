@@ -4,7 +4,7 @@ import { wedding } from "@/lib/wedding";
 
 export function HeroSection() {
   return (
-    <section id="hero" className="section-backdrop section-backdrop--roses section-backdrop--hero">
+    <section id="hero" className="relative">
       <nav aria-label="Điều hướng thiệp cưới" className="section-shell flex items-center justify-between gap-3 border-b border-gold/25 py-5 md:py-6">
         <a href="#hero" aria-label="Hoàng Long và Hà Thanh — về đầu trang" className="flex items-center gap-2 font-heading text-2xl text-charcoal">
           L <Heart aria-hidden="true" className="h-3.5 w-3.5 text-gold" /> T

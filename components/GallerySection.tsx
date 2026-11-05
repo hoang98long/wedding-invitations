@@ -29,7 +29,7 @@ export function GallerySection() {
   }
 
   return (
-    <section id="gallery" className="section-space bg-ivory">
+    <section id="gallery" className="section-space">
       <div className="section-shell">
         <SectionHeading eyebrow="Những khung hình thương nhớ" title="Giữa muôn vàn khoảnh khắc, mình chọn có nhau" subtitle="Mai này khi nhìn lại, điều đẹp nhất trong mỗi khung hình vẫn là nụ cười của người bên cạnh." />
         <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
