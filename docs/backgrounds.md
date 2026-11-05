@@ -5,10 +5,10 @@ Ba ảnh được tạo bằng công cụ imagegen tích hợp, rồi chuyển s
 | File đã lưu | Sử dụng |
 | --- | --- |
 | [sage-botanical.webp](../public/media/backgrounds/sage-botanical.webp) | Bộ đếm, lịch cưới hai bên và mừng cưới |
-| [ivory-roses.webp](../public/media/backgrounds/ivory-roses.webp) | Biểu mẫu và sổ lời chúc |
+| [ivory-roses.webp](../public/media/backgrounds/ivory-roses.webp) | Trang mở đầu, biểu mẫu và sổ lời chúc |
 | [forest-garden.webp](../public/media/backgrounds/forest-garden.webp) | Chân trang cảm ơn |
 
-Hero và album giữ nền ngà để làm nổi ảnh thật. Trên điện thoại, họa tiết nền sáng được đặt ở hai góc và làm mờ dần; thẻ thông tin, biểu mẫu và QR có lớp nền ngà gần như đục để dễ đọc. Nền không cố định khi cuộn.
+Trang mở đầu dùng nền hoa màu ngà với lớp phủ sáng dịu sau chữ; album giữ nền ngà để làm nổi ảnh thật. Trên điện thoại, họa tiết nền sáng được đặt ở hai góc và làm mờ dần, với hoa ngà ở góc trên phải và dưới trái; thẻ thông tin, biểu mẫu và QR có lớp nền ngà gần như đục để dễ đọc. Nền không cố định khi cuộn.
 
 ## Prompt 1 — sage-botanical
 

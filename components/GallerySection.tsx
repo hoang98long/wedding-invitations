@@ -51,7 +51,7 @@ export function GallerySection() {
           <div className="relative min-h-0 w-full max-w-5xl flex-1">
             <Image src={`/media/images/${active.file}.webp`} alt={active.alt} fill sizes="(min-width: 1200px) 1000px, 90vw" className="object-contain" />
           </div>
-          <p className="max-w-xl text-center text-xs leading-6 text-white/80" aria-live="polite">{(activeIndex ?? 0) + 1} / {weddingPhotos.length} · {active.alt}</p>
+          <p className="max-w-xl text-center text-xs leading-6 text-white/80" aria-live="polite">{(activeIndex ?? 0) + 1} / {weddingPhotos.length}</p>
         </div>}
         <button type="button" aria-label="Ảnh trước" onClick={() => move(-1)} className="absolute left-0 top-1/2 z-10 flex h-14 w-12 -translate-y-1/2 items-center justify-center rounded-full text-white hover:bg-white/10 sm:left-4"><ChevronLeft aria-hidden="true" className="h-8 w-8" /></button>
         <button type="button" aria-label="Ảnh tiếp theo" onClick={() => move(1)} className="absolute right-0 top-1/2 z-10 flex h-14 w-12 -translate-y-1/2 items-center justify-center rounded-full text-white hover:bg-white/10 sm:right-4"><ChevronRight aria-hidden="true" className="h-8 w-8" /></button>

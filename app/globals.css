@@ -122,6 +122,18 @@ section[id] {
   --section-image: url("/media/backgrounds/ivory-roses.webp");
 }
 
+.section-backdrop--hero {
+  --section-color: #faf7f1;
+}
+
+.section-backdrop--hero::before {
+  opacity: 0.76;
+}
+
+.section-backdrop--hero::after {
+  background: linear-gradient(90deg, rgb(250 248 244 / 60%), rgb(250 248 244 / 36%) 50%, rgb(250 248 244 / 12%));
+}
+
 .section-backdrop--forest {
   --section-color: #263e32;
   --section-image: url("/media/backgrounds/forest-garden.webp");
@@ -149,6 +161,14 @@ section[id] {
     background-size: cover;
     background-position: center;
     mask-image: none;
+  }
+
+  .section-backdrop--roses::before {
+    background-position: right top, left bottom;
+  }
+
+  .section-backdrop--hero::after {
+    background: linear-gradient(to bottom, rgb(250 248 244 / 30%), rgb(250 248 244 / 55%) 45%, rgb(250 248 244 / 12%));
   }
 }
 

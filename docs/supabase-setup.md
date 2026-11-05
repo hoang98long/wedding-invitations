@@ -2,7 +2,7 @@
 
 Website: **https://wedding-invitations-ochre.vercel.app**.
 
-Lỗi hiện tại là HTTP 503 từ /api/wishes khi chưa có cơ sở dữ liệu. Các bước dưới đây tạo nơi lưu chung cho mọi khách; lời chúc tồn tại qua các lần redeploy.
+API /api/wishes trả HTTP 503 nếu deployment thiếu cấu hình, thiếu bảng/hàm hoặc không truy cập được database. Các bước dưới đây tạo nơi lưu chung cho mọi khách; lời chúc tồn tại qua các lần redeploy.
 
 ## 1. Tạo project
 
@@ -47,6 +47,17 @@ Giữ secret key trong Vercel hoặc .env.local trên máy, không đưa vào Gi
 2. Chờ deployment mới thành công. Nếu đã deploy trước khi thêm biến môi trường, mở **Deployments → deployment mới nhất → Redeploy**.
 
 Biến mới áp dụng cho deployment tiếp theo, theo [tài liệu Vercel](https://vercel.com/docs/environment-variables).
+
+### Đã kết nối Supabase với Vercel nhưng vẫn báo thiếu cấu hình
+
+1. Mở **đúng project website** trong Vercel, kiểm tra **Settings → Environment Variables** có **SUPABASE_URL** hoặc **NEXT_PUBLIC_SUPABASE_URL**, và **SUPABASE_SECRET_KEY** hoặc legacy **SUPABASE_SERVICE_ROLE_KEY**.
+2. Kiểm tra các biến được áp dụng cho **Production** để website chính sử dụng được. Preview dành cho các deployment thử nghiệm.
+3. Nếu dùng integration, kiểm tra tài nguyên Supabase đã gắn vào project website. [Vercel Marketplace integration](https://supabase.com/docs/guides/integrations/vercel-marketplace) đồng bộ URL và secret key tới các project được kết nối.
+4. Chọn **Redeploy** sau khi lưu biến hoặc kết nối tài nguyên. Deployment cũ tiếp tục dùng cấu hình trước đó.
+
+Key phải được lưu dưới đúng tên biến; ví dụ giá trị sb_secret_... đặt trong biến SUPABASE_SECRET_KEY. POSTGRES_URL và SUPABASE_JWT_SECRET không thay thế cho cặp Project URL/API key mà ứng dụng đang dùng.
+
+Khi trả GUESTBOOK_NOT_CONFIGURED, API mới có trường **missingVariables** chỉ gồm **tên biến còn thiếu**, không có giá trị khóa. Lệnh guestbook:check in các tên này để đối chiếu với Vercel.
 
 ## 6. Kiểm tra
 

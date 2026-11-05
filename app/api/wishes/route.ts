@@ -19,7 +19,8 @@ export async function GET(request: NextRequest) {
     const code = error instanceof GuestbookStorageError ? error.code : "GUESTBOOK_UNAVAILABLE";
     console.error("Unable to read wedding wishes:", code, error instanceof Error ? error.message : "Unknown storage error");
     const message = needsGuestbookSetup(code) ? "Sổ lời chúc đang được chuẩn bị. Bạn ghé lại sau một chút nhé." : "Chưa thể tải lời chúc. Bạn vui lòng thử lại nhé.";
-    return NextResponse.json({ error: message, code }, { status: 503, headers });
+    const details = error instanceof GuestbookStorageError && error.missingVariables.length ? { missingVariables: error.missingVariables } : {};
+    return NextResponse.json({ error: message, code, ...details }, { status: 503, headers });
   }
 }
 
@@ -78,6 +79,7 @@ export async function POST(request: NextRequest) {
     }
     const code = error instanceof GuestbookStorageError ? error.code : "GUESTBOOK_UNAVAILABLE";
     console.error("Unable to save wedding wish:", code, error instanceof Error ? error.message : "Unknown storage error");
-    return NextResponse.json({ error: "Chưa gửi được lời chúc. Nội dung vẫn được giữ lại để bạn thử lần nữa nhé.", code }, { status: 503, headers });
+    const details = error instanceof GuestbookStorageError && error.missingVariables.length ? { missingVariables: error.missingVariables } : {};
+    return NextResponse.json({ error: "Chưa gửi được lời chúc. Nội dung vẫn được giữ lại để bạn thử lần nữa nhé.", code, ...details }, { status: 503, headers });
   }
 }

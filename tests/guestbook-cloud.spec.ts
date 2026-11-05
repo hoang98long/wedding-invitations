@@ -24,6 +24,16 @@ test("serverless needs durable configuration and public keys cannot impersonate 
       expect((error as Error).message).not.toContain("sb_publishable_public");
     }
   }
+  for (const [environment, missing] of [
+    [{ VERCEL: "1", SUPABASE_SECRET_KEY: "sb_secret_private_test" }, ["SUPABASE_URL"]],
+    [{ VERCEL: "1", SUPABASE_URL: "https://example.supabase.co" }, ["SUPABASE_SECRET_KEY"]]
+  ] as const) {
+    try { databaseConfig(environment); throw new Error("Expected setup failure"); } catch (error) {
+      expect(error).toBeInstanceOf(GuestbookStorageError);
+      expect((error as GuestbookStorageError).missingVariables).toEqual(missing);
+      expect(JSON.stringify(error)).not.toContain("sb_secret_private_test");
+    }
+  }
 });
 
 test("hosted reads, writes and retries work with a modern Supabase key", async ({ request }) => {

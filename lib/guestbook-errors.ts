@@ -7,7 +7,7 @@ export type GuestbookErrorCode =
   | "GUESTBOOK_UNAVAILABLE";
 
 export class GuestbookStorageError extends Error {
-  constructor(public readonly code: GuestbookErrorCode, message: string) {
+  constructor(public readonly code: GuestbookErrorCode, message: string, public readonly missingVariables: string[] = []) {
     super(message);
     this.name = "GuestbookStorageError";
   }

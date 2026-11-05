@@ -49,7 +49,7 @@ test("stable hydration with a different client clock, correct dates, maps and re
     expect(background.status()).toBe(200);
     expect(background.headers()["content-type"]).toContain("image/webp");
   }
-  for (const section of ["countdown", "guestbook", "gifts"]) {
+  for (const section of ["hero", "countdown", "guestbook", "gifts"]) {
     await page.locator(`#${section}`).screenshot({ path: `.local/qa/${testInfo.project.name}-${section}-background.png` });
   }
   // Trigger lazy images before checking they decode successfully.

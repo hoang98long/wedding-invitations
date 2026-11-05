@@ -22,6 +22,10 @@ try {
     console.log(`OK: API lời chúc trả HTTP ${response.status}, đọc được ${body.wishes.length} lời chúc. Không tạo dữ liệu thử.`);
   } else {
     console.error(`API lời chúc trả HTTP ${response.status}.`);
+    if (Array.isArray(body?.missingVariables)) {
+      const missing = body.missingVariables.filter(name => ["SUPABASE_URL", "SUPABASE_SECRET_KEY"].includes(name));
+      if (missing.length) console.error(`Deployment đang thiếu: ${missing.join(", ")}.`);
+    }
     console.error(instructions[body?.code] || "Kiểm tra đã chạy supabase/guestbook.sql, thêm biến môi trường trong Vercel, và redeploy bản code mới. Xem docs/supabase-setup.md.");
     process.exitCode = 1;
   }

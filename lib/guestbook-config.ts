@@ -10,7 +10,8 @@ export function databaseConfig(env: Readonly<Record<string, string | undefined>>
   const serverless = Boolean(env.VERCEL || env.AWS_LAMBDA_FUNCTION_NAME);
   if (!rawUrl && !key && !serverless) return null;
   if (!rawUrl || !key) {
-    throw new GuestbookStorageError("GUESTBOOK_NOT_CONFIGURED", "Set SUPABASE_URL and SUPABASE_SECRET_KEY (or the legacy SUPABASE_SERVICE_ROLE_KEY), then redeploy.");
+    const missingVariables = [...(!rawUrl ? ["SUPABASE_URL"] : []), ...(!key ? ["SUPABASE_SECRET_KEY"] : [])];
+    throw new GuestbookStorageError("GUESTBOOK_NOT_CONFIGURED", "Set SUPABASE_URL and SUPABASE_SECRET_KEY (or the legacy SUPABASE_SERVICE_ROLE_KEY), then redeploy.", missingVariables);
   }
 
   let projectUrl: URL;
