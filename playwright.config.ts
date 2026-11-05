@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./tests",
+  testMatch: "wedding.spec.ts",
   fullyParallel: false,
   workers: 1,
   timeout: 45000,
@@ -18,6 +19,8 @@ export default defineConfig({
       NEXT_DIST_DIR: ".local/next-build",
       GUESTBOOK_DATA_DIR: `.local/qa-wishes/${Date.now()}`,
       SUPABASE_URL: "",
+      NEXT_PUBLIC_SUPABASE_URL: "",
+      SUPABASE_SECRET_KEY: "",
       SUPABASE_SERVICE_ROLE_KEY: "",
       VERCEL: "",
       AWS_LAMBDA_FUNCTION_NAME: ""

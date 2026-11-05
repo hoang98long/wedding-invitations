@@ -2,6 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { listWishes, saveWish, WishRateLimitError } from "@/lib/guestbook-store";
 import { wishInputSchema } from "@/lib/wishes";
+import { GuestbookStorageError, needsGuestbookSetup } from "@/lib/guestbook-errors";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,8 +16,10 @@ export async function GET(request: NextRequest) {
     }
     return response;
   } catch (error) {
-    console.error("Unable to read wedding wishes:", error instanceof Error ? error.message : "Unknown storage error");
-    return NextResponse.json({ error: "Chưa thể tải lời chúc. Bạn vui lòng thử lại nhé." }, { status: 503, headers });
+    const code = error instanceof GuestbookStorageError ? error.code : "GUESTBOOK_UNAVAILABLE";
+    console.error("Unable to read wedding wishes:", code, error instanceof Error ? error.message : "Unknown storage error");
+    const message = needsGuestbookSetup(code) ? "Sổ lời chúc đang được chuẩn bị. Bạn ghé lại sau một chút nhé." : "Chưa thể tải lời chúc. Bạn vui lòng thử lại nhé.";
+    return NextResponse.json({ error: message, code }, { status: 503, headers });
   }
 }
 
@@ -66,14 +69,15 @@ export async function POST(request: NextRequest) {
     const address = request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
     // Guests sharing wedding Wi-Fi must each be able to send their own wish.
     const visitor = `${address}:${request.cookies.get("wedding_guest")?.value || "anonymous"}`;
-    const salt = process.env.GUESTBOOK_RATE_LIMIT_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || "local-wedding-guestbook";
+    const salt = process.env.GUESTBOOK_RATE_LIMIT_SECRET || process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "local-wedding-guestbook";
     const visitorHash = createHash("sha256").update(`${salt}:${visitor}`).digest("hex");
     return NextResponse.json({ wish: await saveWish(parsed.data, visitorHash) }, { status: 201, headers });
   } catch (error) {
     if (error instanceof WishRateLimitError) {
       return NextResponse.json({ error: "Bạn vừa gửi lời chúc. Hãy chờ 20 giây trước khi gửi thêm nhé." }, { status: 429, headers: { ...headers, "Retry-After": "20" } });
     }
-    console.error("Unable to save wedding wish:", error instanceof Error ? error.message : "Unknown storage error");
-    return NextResponse.json({ error: "Chưa gửi được lời chúc. Nội dung vẫn được giữ lại để bạn thử lần nữa nhé." }, { status: 503, headers });
+    const code = error instanceof GuestbookStorageError ? error.code : "GUESTBOOK_UNAVAILABLE";
+    console.error("Unable to save wedding wish:", code, error instanceof Error ? error.message : "Unknown storage error");
+    return NextResponse.json({ error: "Chưa gửi được lời chúc. Nội dung vẫn được giữ lại để bạn thử lần nữa nhé.", code }, { status: 503, headers });
   }
 }

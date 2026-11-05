@@ -44,6 +44,14 @@ test("stable hydration with a different client clock, correct dates, maps and re
     expect(cards[0].height).toBeCloseTo(cards[1].height, 0);
   }
   await page.setViewportSize(testInfo.project.name === "mobile" ? { width: 390, height: 844 } : { width: 1440, height: 1000 });
+  for (const name of ["sage-botanical", "ivory-roses", "forest-garden"]) {
+    const background = await page.request.get(`/media/backgrounds/${name}.webp`);
+    expect(background.status()).toBe(200);
+    expect(background.headers()["content-type"]).toContain("image/webp");
+  }
+  for (const section of ["countdown", "guestbook", "gifts"]) {
+    await page.locator(`#${section}`).screenshot({ path: `.local/qa/${testInfo.project.name}-${section}-background.png` });
+  }
   // Trigger lazy images before checking they decode successfully.
   await page.locator("#gallery").scrollIntoViewIfNeeded();
   await page.locator("#gifts").scrollIntoViewIfNeeded();

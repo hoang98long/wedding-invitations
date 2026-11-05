@@ -34,12 +34,12 @@ export function GiftSection() {
   }
 
   return (
-    <section id="gifts" className="section-space bg-champagne/30">
+    <section id="gifts" className="section-space section-backdrop section-backdrop--sage">
       <div className="section-shell">
         <SectionHeading eyebrow="Hộp mừng cưới" title="Gửi chút yêu thương" subtitle="Bạn đến chung vui đã là món quà quý giá. Nếu muốn gửi thêm một chút yêu thương, chúng mình xin nhận bằng tất cả sự trân trọng." />
         <div className="mx-auto grid max-w-4xl grid-cols-2 gap-3 sm:gap-6">
           {accounts.map(account => (
-            <article key={account.side} className="flex min-w-0 flex-col items-center border border-gold/30 bg-ivory px-3 py-6 text-center sm:px-8 sm:py-9">
+            <article key={account.side} className="wedding-paper flex min-w-0 flex-col items-center rounded-t-[2.5rem] border border-gold/30 px-3 py-6 text-center sm:px-8 sm:py-9">
               <Heart aria-hidden="true" className="mb-3 h-4 w-4 text-gold" />
               <h3 className="font-heading text-2xl sm:text-3xl">{account.side}</h3>
               <div className="my-5 w-full max-w-[230px] bg-white p-2 sm:p-4">

@@ -4,12 +4,12 @@ import { ceremonies, directionsUrl, mapEmbedUrl } from "@/lib/wedding";
 
 export function WeddingInfoSection() {
   return (
-    <section id="wedding-info" className="section-space bg-champagne/30">
+    <section id="wedding-info" className="section-space section-backdrop section-backdrop--sage">
       <div className="section-shell">
         <SectionHeading eyebrow="Trân trọng kính mời" title="Về chung một nhà" subtitle="Sự hiện diện của bạn là niềm hạnh phúc của chúng mình và hai bên gia đình. Hẹn bạn đến chung vui trong ngày đặc biệt này." />
         <div className="grid gap-7 md:grid-cols-2">
           {ceremonies.map(ceremony => (
-            <article key={ceremony.side} className="flex min-w-0 flex-col overflow-hidden border border-gold/30 bg-ivory">
+            <article key={ceremony.side} className="wedding-paper flex min-w-0 flex-col overflow-hidden rounded-t-[3rem] border border-gold/30">
               <div className="flex flex-1 flex-col items-center px-5 pb-8 pt-9 text-center sm:px-9">
                 <p className="eyebrow">Lễ cưới · {ceremony.side}</p>
                 <h3 className="mt-4 font-heading text-4xl leading-snug">{ceremony.name}</h3>

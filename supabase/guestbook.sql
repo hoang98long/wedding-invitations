@@ -12,6 +12,7 @@ create index if not exists wedding_wishes_visitor_idx on public.wedding_wishes (
 alter table public.wedding_wishes enable row level security;
 revoke all on public.wedding_wishes from anon, authenticated;
 grant select, insert on public.wedding_wishes to service_role;
+grant usage on schema public to service_role;
 
 create or replace function public.add_wedding_wish(p_id uuid, p_name text, p_message text, p_visitor_hash text)
 returns table (id uuid, name text, message text, created_at timestamptz)
@@ -33,3 +34,4 @@ end;
 $$;
 revoke all on function public.add_wedding_wish(uuid, text, text, text) from public, anon, authenticated;
 grant execute on function public.add_wedding_wish(uuid, text, text, text) to service_role;
+notify pgrst, 'reload schema';

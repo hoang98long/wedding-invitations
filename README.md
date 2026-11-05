@@ -68,7 +68,7 @@ Thay YOUR_USERNAME và YOUR_REPOSITORY bằng thông tin của bạn. Lịch s�
 1. Push mã nguồn lên GitHub.
 2. Trong Vercel, chọn **Add New → Project**, import repository đó.
 3. Dùng **Framework Preset: Next.js**, **Root Directory: ./**; giữ Output Directory mặc định của framework.
-4. Thêm các biến môi trường của sổ lời chúc theo phần **Lưu lời chúc** bên dưới. Trên Vercel cần **SUPABASE_URL** và **SUPABASE_SERVICE_ROLE_KEY** để khách gửi lời chúc được lưu lâu dài.
+4. Thêm các biến môi trường của sổ lời chúc theo phần **Lưu lời chúc** bên dưới. Trên Vercel cần **SUPABASE_URL** và **SUPABASE_SECRET_KEY** (hoặc legacy **SUPABASE_SERVICE_ROLE_KEY**) để khách gửi lời chúc được lưu lâu dài. Có [hướng dẫn tạo Supabase từng bước](docs/supabase-setup.md).
 5. Chọn **Deploy**. Website dùng tài nguyên có sẵn trong public/; thư viện và bản build được tạo trên Vercel.
 6. Sau khi có tên miền thật, đặt **NEXT_PUBLIC_SITE_URL** thành URL HTTPS của website và redeploy để ảnh xem trước khi chia sẻ dùng đúng địa chỉ.
 
@@ -111,6 +111,8 @@ Script tạo ảnh WebP tối đa 1600 × 2000 px, tự xoay theo EXIF và loạ
 
 Font Inter và Playfair Display được lưu tại **public/fonts/**, có đầy đủ ký tự tiếng Việt và giấy phép OFL đi kèm. Website không cần tải font từ Google khi khách mở thiệp.
 
+Ba nền ảnh lá xanh sage, hoa hồng/peony màu ngà và xanh rừng được lưu tại **public/media/backgrounds/**, tổng khoảng 137 KB. Xem [bố trí, file ảnh và prompt tạo ảnh](docs/backgrounds.md). Các lớp nền được căn riêng cho điện thoại để giữ nội dung và QR rõ ràng.
+
 ## Lưu lời chúc
 
 Khách điền tên và lời chúc, gửi qua **POST /api/wishes**. **GET /api/wishes** trả về 100 lời chúc mới nhất. Nội dung chỉ báo gửi thành công sau khi máy chủ xác nhận đã lưu, dùng chung cho mọi khách và tồn tại sau khi tải lại trang.
@@ -131,14 +133,22 @@ Phải cấu hình cơ sở dữ liệu để lời chúc tồn tại qua các l
 2. Chạy toàn bộ **supabase/guestbook.sql** trong SQL Editor của project.
 3. Sao chép **.env.example** thành **.env.local** khi thử tại máy, hoặc thêm biến trong phần Environment Variables của hosting:
    - **SUPABASE_URL**: URL project Supabase.
-   - **SUPABASE_SERVICE_ROLE_KEY**: service role key, chỉ dùng phía máy chủ.
+   - **SUPABASE_SECRET_KEY**: Secret key mới dạng sb_secret_..., chỉ dùng phía máy chủ. Nếu dùng legacy service_role JWT thì đặt **SUPABASE_SERVICE_ROLE_KEY** thay thế.
    - **GUESTBOOK_RATE_LIMIT_SECRET**: chuỗi ngẫu nhiên dài, khuyến nghị.
    - **NEXT_PUBLIC_SITE_URL**: URL thật của website, để tạo ảnh xem trước khi chia sẻ.
 4. Build và triển khai lại.
 
-Không đặt service role key trong biến bắt đầu bằng NEXT_PUBLIC_. Bảng bật RLS; khách truy cập qua API của Next.js, không truy cập trực tiếp bảng. Hàm SQL xử lý gửi, giới hạn tần suất và thử lại trong cùng giao dịch.
+Không đặt secret key/service role key trong biến bắt đầu bằng NEXT_PUBLIC_. Bảng bật RLS; khách truy cập qua API của Next.js, không truy cập trực tiếp bảng. Hàm SQL xử lý gửi, giới hạn tần suất và thử lại trong cùng giao dịch. Project URL có thể lấy từ SUPABASE_URL hoặc NEXT_PUBLIC_SUPABASE_URL.
 
 Nếu chạy trên Vercel/serverless mà thiếu cấu hình, API trả lỗi rõ ràng và không ghi dữ liệu vào ổ đĩa tạm. Tích hợp Supabase đã có mã nguồn và schema; cần project cùng biến môi trường thật để dùng trên hosting.
+
+Nếu hiện thông báo chưa thể tải lời chúc, làm theo [hướng dẫn Supabase](docs/supabase-setup.md) hoặc kiểm tra API bằng lệnh chỉ đọc:
+
+```bash
+npm run guestbook:check -- https://wedding-invitations-ochre.vercel.app
+```
+
+API mới trả mã lỗi để phân biệt thiếu biến môi trường, sai key, thiếu bảng/hàm SQL và lỗi kết nối. Giao diện giữ nguyên bản nháp khi gửi lỗi và cho phép tải lại sau khi cấu hình được sửa.
 
 ## Build và kiểm tra
 
@@ -159,6 +169,7 @@ npm run build
 $env:PLAYWRIGHT_BROWSERS_PATH = Join-Path (Get-Location) '.local/pw-browsers'
 npx playwright install chromium
 npm run test:e2e
+npm run test:cloud
 ```
 
 macOS/Linux:
@@ -167,9 +178,12 @@ macOS/Linux:
 NEXT_DIST_DIR=.local/next-build npm run build
 PLAYWRIGHT_BROWSERS_PATH=.local/pw-browsers npx playwright install chromium
 PLAYWRIGHT_BROWSERS_PATH=.local/pw-browsers npm run test:e2e
+PLAYWRIGHT_BROWSERS_PATH=.local/pw-browsers npm run test:cloud
 ```
 
 Kiểm thử bao gồm desktop và điện thoại: hydration khi đồng hồ lệch, bộ đếm sau ngày cưới, tràn ngang ở 320–1440 px, hai cột QR cân đối, album ảnh, nhạc bật/tắt, gửi lời chúc dùng chung, chống gửi trùng, giới hạn tần suất, dữ liệu không hợp lệ và giữ bản nháp khi lỗi mạng. Maps và Google Fonts được chặn trong test để kiểm tra không phụ thuộc dịch vụ ngoài. Ảnh chụp kiểm tra lưu ở **.local/qa/**.
+
+**test:cloud** chạy Next.js ở chế độ dùng backend từ xa với một Supabase REST giả lập trong tests/fixtures. Bộ kiểm thử xác nhận header cho secret key mới, tương thích JWT cũ, mã lỗi cấu hình, luồng lưu/đọc lời chúc và khả năng phục hồi sau lỗi. Bộ này không dùng database thật và không xác nhận deployment Vercel đã cấu hình xong.
 
 Đã cập nhật Next.js lên bản vá 15.5.29 và các dependency chạy thực tế. Tại thời điểm kiểm tra, **npm audit --omit=dev** không báo lỗ hổng; audit đầy đủ còn 6 cảnh báo mức moderate trong chuỗi công cụ ESLint/TypeScript liên quan minimatch.
 

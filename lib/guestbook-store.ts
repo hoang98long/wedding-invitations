@@ -3,21 +3,12 @@ import "server-only";
 import { appendFile, mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import type { WeddingWish, WishInput } from "@/lib/wishes";
+import { databaseConfig } from "@/lib/guestbook-config";
+import { GuestbookStorageError } from "@/lib/guestbook-errors";
 
 type StoredWish = WeddingWish & { visitorHash: string };
 type DatabaseWish = { id: string; name: string; message: string; created_at: string };
 export class WishRateLimitError extends Error {}
-
-function databaseConfig() {
-  const url = process.env.SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (url && key) return { url: url.replace(/\/$/, ""), key };
-  if (url || key || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
-    // Never silently write guest wishes to an ephemeral serverless filesystem.
-    throw new Error("Configure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for durable guestbook storage.");
-  }
-  return null;
-}
 
 const publicWish = ({ id, name, message, createdAt }: StoredWish): WeddingWish => ({ id, name, message, createdAt });
 const fromDatabase = (row: DatabaseWish): WeddingWish => ({ id: row.id, name: row.name, message: row.message, createdAt: row.created_at });
@@ -25,16 +16,27 @@ const fromDatabase = (row: DatabaseWish): WeddingWish => ({ id: row.id, name: ro
 async function databaseRequest(endpoint: string, init?: RequestInit) {
   const config = databaseConfig();
   if (!config) throw new Error("Missing database configuration.");
-  const response = await fetch(`${config.url}/rest/v1/${endpoint}`, {
-    ...init,
-    headers: { apikey: config.key, Authorization: `Bearer ${config.key}`, "Content-Type": "application/json" },
-    cache: "no-store",
-    signal: AbortSignal.timeout(10000)
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${config.url}/rest/v1/${endpoint}`, {
+      ...init,
+      headers: config.headers,
+      cache: "no-store",
+      signal: AbortSignal.timeout(10000)
+    });
+  } catch {
+    throw new GuestbookStorageError("GUESTBOOK_UNAVAILABLE", "Could not reach Supabase. Check the Project URL, project status, and network access.");
+  }
   if (!response.ok) {
     const error = await response.json().catch(() => null);
     if (error?.message === "WISH_RATE_LIMIT") throw new WishRateLimitError();
-    throw new Error(`Guestbook database request failed (${response.status}).`);
+    if (response.status === 401 || response.status === 403) {
+      throw new GuestbookStorageError("GUESTBOOK_ACCESS_DENIED", "Supabase rejected access. Check the backend secret key and run supabase/guestbook.sql to grant service_role access.");
+    }
+    if (response.status === 404 || ["PGRST202", "PGRST205", "42P01", "42883"].includes(error?.code)) {
+      throw new GuestbookStorageError("GUESTBOOK_SCHEMA_MISSING", "Run supabase/guestbook.sql in the correct Supabase project's SQL Editor, then retry.");
+    }
+    throw new GuestbookStorageError("GUESTBOOK_UNAVAILABLE", `Supabase request failed (${response.status}). Check Supabase logs and project status.`);
   }
   return response.json() as Promise<DatabaseWish[]>;
 }

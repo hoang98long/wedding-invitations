@@ -85,6 +85,73 @@ section[id] {
   scroll-margin-top: 20px;
 }
 
+.section-backdrop {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--section-color, #eef1e9);
+}
+
+.section-backdrop::before,
+.section-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.section-backdrop::before {
+  background-image: var(--section-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.88;
+}
+
+.section-backdrop::after {
+  background: linear-gradient(90deg, transparent, rgb(250 248 244 / 30%) 35%, rgb(250 248 244 / 30%) 65%, transparent);
+}
+
+.section-backdrop--sage {
+  --section-color: #e8eddf;
+  --section-image: url("/media/backgrounds/sage-botanical.webp");
+}
+
+.section-backdrop--roses {
+  --section-color: #faf4ee;
+  --section-image: url("/media/backgrounds/ivory-roses.webp");
+}
+
+.section-backdrop--forest {
+  --section-color: #263e32;
+  --section-image: url("/media/backgrounds/forest-garden.webp");
+}
+
+.section-backdrop--forest::after {
+  background: rgb(16 37 26 / 38%);
+}
+
+.wedding-paper {
+  background: rgb(250 248 244 / 96%);
+  box-shadow: 0 12px 40px rgb(38 62 50 / 5%);
+}
+
+@media (max-width: 767px) {
+  .section-backdrop::before {
+    background-image: var(--section-image), var(--section-image);
+    background-size: auto 300px;
+    background-position: left top, right bottom;
+    mask-image: linear-gradient(to bottom, black, transparent 300px, transparent calc(100% - 300px), black);
+  }
+
+  .section-backdrop--forest::before {
+    background-image: var(--section-image);
+    background-size: cover;
+    background-position: center;
+    mask-image: none;
+  }
+}
+
 :focus-visible {
   outline: 2px solid #82633d;
   outline-offset: 4px;

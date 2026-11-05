@@ -11,6 +11,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "export:source": "node scripts/export-source.mjs",
     "test:e2e": "playwright test",
+    "test:cloud": "playwright test -c playwright.cloud.config.ts",
+    "guestbook:check": "node scripts/check-guestbook.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint ."
