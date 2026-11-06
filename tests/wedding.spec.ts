@@ -139,6 +139,45 @@ test("gallery shows nine complete portraits with the feature centered, navigates
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText("1 / 9");
+  if (testInfo.project.name === "mobile") {
+    const cdp = await page.context().newCDPSession(page);
+    const count = dialog.locator('p[aria-live="polite"]');
+    const scrollBefore = await page.evaluate(() => window.scrollY);
+    async function swipe(dx: number, dy = 0, fingers = 1) {
+      const image = await dialog.locator("img").boundingBox();
+      if (!image) throw new Error("The open photo is not visible");
+      const x = image.x + image.width / 2 - dx / 2;
+      const y = image.y + image.height / 2 - dy / 2;
+      const points = (progress: number) => Array.from({ length: fingers }, (_, index) => ({ x: x + dx * progress + index * 20, y: y + dy * progress + index * 30 }));
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: points(0) });
+      for (let step = 1; step <= 10; step++) {
+        await cdp.send("Input.dispatchTouchEvent", { type: "touchMove", touchPoints: points(step / 10) });
+        await page.waitForTimeout(20);
+      }
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+    }
+    await swipe(-160);
+    await expect(count).toHaveText("2 / 9");
+    await swipe(160);
+    await expect(count).toHaveText("1 / 9");
+    await swipe(160);
+    await expect(count).toHaveText("9 / 9");
+    await swipe(-160);
+    await expect(count).toHaveText("1 / 9");
+    await swipe(20);
+    await expect(count).toHaveText("1 / 9");
+    await swipe(15, 140);
+    await expect(count).toHaveText("1 / 9");
+    await swipe(-150, 0, 2);
+    await expect(count).toHaveText("1 / 9");
+    const image = await dialog.locator("img").boundingBox();
+    if (!image) throw new Error("The open photo is not visible");
+    await page.touchscreen.tap(image.x + image.width / 2, image.y + image.height / 2);
+    await expect(dialog).toBeVisible();
+    await expect(count).toHaveText("1 / 9");
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);
+    await cdp.detach();
+  }
   await page.getByRole("button", { name: "Ảnh tiếp theo" }).click();
   await expect(dialog).toContainText("2 / 9");
   await page.keyboard.press("ArrowLeft");
@@ -153,6 +192,10 @@ test("gallery shows nine complete portraits with the feature centered, navigates
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
   await expect(opener).toBeFocused();
+  await opener.click();
+  await expect(dialog).toBeVisible();
+  await dialog.click({ position: { x: page.viewportSize()!.width / 2, y: page.viewportSize()!.height - 20 } });
+  await expect(dialog).not.toBeVisible();
 });
 
 test("music uses the local looping track and respects manual pause", async ({ page, request }) => {

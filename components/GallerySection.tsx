@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type TouchEvent } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -9,6 +9,7 @@ import { photoSrc, weddingPhotos } from "@/lib/wedding";
 export function GallerySection() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const swipeStart = useRef<{ id: number; x: number; y: number } | null>(null);
   const isOpen = activeIndex !== null;
   const active = activeIndex === null ? null : weddingPhotos[activeIndex];
 
@@ -19,6 +20,7 @@ export function GallerySection() {
     document.body.style.overflow = "hidden";
     dialog.showModal();
     return () => {
+      swipeStart.current = null;
       dialog.close();
       document.body.style.overflow = previousOverflow;
     };
@@ -26,6 +28,39 @@ export function GallerySection() {
 
   function move(step: number) {
     setActiveIndex(index => index === null ? null : (index + step + weddingPhotos.length) % weddingPhotos.length);
+  }
+
+  function startSwipe(event: TouchEvent<HTMLDivElement>) {
+    swipeStart.current = null;
+    // Leave two-finger gestures and panning a zoomed image to the browser.
+    if (event.touches.length !== 1 || (window.visualViewport?.scale ?? 1) > 1.01) return;
+    const touch = event.touches[0];
+    swipeStart.current = { id: touch.identifier, x: touch.clientX, y: touch.clientY };
+  }
+
+  function trackSwipe(event: TouchEvent<HTMLDivElement>) {
+    const start = swipeStart.current;
+    if (!start) return;
+    if (event.touches.length !== 1) {
+      swipeStart.current = null;
+      return;
+    }
+    const touch = event.touches[0];
+    const dx = Math.abs(touch.clientX - start.x);
+    const dy = Math.abs(touch.clientY - start.y);
+    if (dy > 12 && dy > dx) swipeStart.current = null;
+  }
+
+  function endSwipe(event: TouchEvent<HTMLDivElement>) {
+    const start = swipeStart.current;
+    swipeStart.current = null;
+    if (!start || event.touches.length > 0) return;
+    const touch = Array.from(event.changedTouches).find(item => item.identifier === start.id);
+    if (!touch) return;
+    const dx = touch.clientX - start.x;
+    const dy = touch.clientY - start.y;
+    // Ignore taps, small movements and gestures intended to scroll vertically.
+    if (Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) * 1.3) move(dx < 0 ? 1 : -1);
   }
 
   return (
@@ -47,9 +82,9 @@ export function GallerySection() {
         if (event.key === "ArrowRight") { event.preventDefault(); move(1); }
       }} className="gallery-dialog">
         <button type="button" autoFocus aria-label="Đóng ảnh" onClick={() => setActiveIndex(null)} className="absolute right-3 top-3 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/30 text-white hover:bg-black/60 sm:right-6 sm:top-6"><X aria-hidden="true" className="h-6 w-6" /></button>
-        {active && <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center gap-3 px-12 py-20 sm:px-20">
+        {active && <div onTouchStart={startSwipe} onTouchMove={trackSwipe} onTouchEnd={endSwipe} onTouchCancel={() => { swipeStart.current = null; }} onClick={event => { if (event.target === event.currentTarget) setActiveIndex(null); }} style={{ touchAction: "pan-y pinch-zoom" }} className="flex h-full w-full flex-col items-center justify-center gap-3 px-12 py-20 sm:px-20">
           <div className="relative min-h-0 w-full max-w-5xl flex-1">
-            <Image src={photoSrc(active.file)} alt={active.alt} fill sizes="(min-width: 1200px) 1000px, 90vw" className="object-contain" />
+            <Image src={photoSrc(active.file)} alt={active.alt} fill sizes="(min-width: 1200px) 1000px, 90vw" className="object-contain" draggable={false} />
           </div>
           <p className="max-w-xl text-center text-xs leading-6 text-white/80" aria-live="polite">{(activeIndex ?? 0) + 1} / {weddingPhotos.length}</p>
         </div>}
