@@ -1,6 +1,6 @@
 ﻿import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Heart } from "lucide-react";
-import { wedding } from "@/lib/wedding";
+import { photoSrc, wedding } from "@/lib/wedding";
 
 export function HeroSection() {
   return (
@@ -37,7 +37,7 @@ export function HeroSection() {
         <div className="relative mx-auto w-full max-w-[460px] px-3 pb-6 md:max-w-none">
           <div className="absolute inset-x-0 bottom-3 top-4 rounded-t-[48%] border border-gold/50" />
           <div className="relative aspect-[3/4] overflow-hidden rounded-t-[48%] bg-champagne">
-            <Image src="/media/images/LMC_0129.webp" alt="Hoàng Long và Hà Thanh rạng rỡ bên nhau trong bộ ảnh cưới" fill priority sizes="(min-width: 1200px) 480px, (min-width: 768px) 45vw, 90vw" className="object-cover" />
+            <Image src={photoSrc("LMC_0129")} alt="Hoàng Long và Hà Thanh rạng rỡ bên nhau trong bộ ảnh cưới" fill priority sizes="(min-width: 1200px) 480px, (min-width: 768px) 45vw, 90vw" className="object-cover" />
           </div>
           <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap border border-gold/25 bg-ivory px-6 py-3 text-xs tracking-[0.16em]">
             <span>28 · 29</span><Heart aria-hidden="true" className="h-3.5 w-3.5 text-gold" /><span>11 · 2026</span>

@@ -1,4 +1,5 @@
 ﻿import type { Metadata } from "next";
+import { photoSrc } from "@/lib/wedding";
 import "./fonts.css";
 import "./globals.css";
 
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "vi_VN",
-    ...(process.env.NEXT_PUBLIC_SITE_URL ? { images: [{ url: "/media/images/LMC_0129.webp", width: 1332, height: 2000, alt: "Thiệp cưới Hoàng Long và Hà Thanh" }] } : {})
+    ...(process.env.NEXT_PUBLIC_SITE_URL ? { images: [{ url: photoSrc("LMC_0129"), width: 1332, height: 2000, alt: "Thiệp cưới Hoàng Long và Hà Thanh" }] } : {})
   },
   formatDetection: { telephone: false, email: false, address: false, date: false }
 };

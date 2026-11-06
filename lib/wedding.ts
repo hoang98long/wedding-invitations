@@ -1,3 +1,5 @@
+import photoAssets from "@/lib/photo-assets.json";
+
 // All dates include the Vietnam UTC+7 offset, independently of server timezone.
 export const wedding = {
   groom: "Hoàng Long",
@@ -59,13 +61,20 @@ export const ceremonies = [
 ] as const;
 
 export const weddingPhotos = [
-  { file: "LMC_0464", alt: "Hoàng Long và Hà Thanh bên những đóa hoa trong bộ ảnh cưới" },
-  { file: "LMC_0129", alt: "Nụ cười hạnh phúc của Hoàng Long và Hà Thanh" },
+  { file: "LMC_6385", alt: "Hoàng Long và Hà Thanh bên khung cửa cao mang nét cổ điển" },
   { file: "LMC_6558", alt: "Cô dâu và chú rể trao nhau ánh nhìn bên khung cửa" },
-  { file: "LMC_8835", alt: "Hoàng Long và Hà Thanh trong tà áo dài và quân phục" },
-  { file: "LMC_0588", alt: "Khoảnh khắc dịu dàng bên nhau của cô dâu và chú rể" },
-  { file: "LMC_9845", alt: "Cô dâu nâng bó hoa bên chú rể trong ngày chụp ảnh cưới" }
+  { file: "LMC_6853", alt: "Hoàng Long và Hà Thanh dưới ô cửa vòm ngập ánh nắng" },
+  { file: "LMC_0464", alt: "Hoàng Long và Hà Thanh bên những đóa hoa trong bộ ảnh cưới" },
+  { file: "LMC_9512", alt: "Nụ cười hạnh phúc của cô dâu và chú rể trong khung hình sáng dịu" },
+  { file: "LMC_9969", alt: "Hoàng Long và Hà Thanh bên hoa trắng và ánh nắng ấm" },
+  { file: "LMC_8281", alt: "Cô dâu và chú rể sánh bước bên nhau trên đường Độc Lập" },
+  { file: "LMC_7745", alt: "Hoàng Long trong quân phục trao Hà Thanh ánh nhìn trìu mến" },
+  { file: "LMC_8611", alt: "Hoàng Long và Hà Thanh bên nhau dưới bầu trời xanh" }
 ] as const;
+
+export function photoSrc(file: keyof typeof photoAssets) {
+  return `/media/images/${file}.webp?v=${photoAssets[file].version}`;
+}
 
 export function directionsUrl(coordinates: string) {
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(coordinates)}&travelmode=driving`;

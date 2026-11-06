@@ -1,4 +1,5 @@
-import { access, mkdir, readdir, copyFile, stat } from "node:fs/promises";
+import { access, mkdir, readdir, copyFile, stat, readFile, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -20,16 +21,24 @@ await mkdir(path.join(destination, "sound"), { recursive: true });
 
 let originalBytes = 0;
 let optimizedBytes = 0;
+const photoAssets = {};
 for (const name of (await readdir(path.join(source, "images"))).sort()) {
   if (!/\.jpe?g$/i.test(name)) continue;
   const original = path.join(source, "images", name);
   const output = path.join(destination, "images", name.replace(/\.jpe?g$/i, ".webp"));
   // Auto-orient from EXIF; cap resolution and strip camera/GPS metadata.
-  await sharp(original).rotate().resize({ width: 1600, height: 2000, fit: "inside", withoutEnlargement: true })
+  const info = await sharp(original).rotate().resize({ width: 1600, height: 2000, fit: "inside", withoutEnlargement: true })
     .webp({ quality: 83, effort: 5 }).toFile(output);
+  photoAssets[path.parse(name).name] = {
+    width: info.width,
+    height: info.height,
+    version: createHash("sha256").update(await readFile(output)).digest("hex").slice(0, 12)
+  };
   originalBytes += (await stat(original)).size;
   optimizedBytes += (await stat(output)).size;
 }
+// A new content version also refreshes browser/CDN copies after photos are replaced.
+await writeFile(path.join(root, "lib", "photo-assets.json"), `${JSON.stringify(photoAssets, null, 2)}\n`);
 for (const name of ["QR_groom.png", "QR_bride.png"]) {
   // Keep QR pixels lossless and preserve the full quiet zone.
   await sharp(path.join(source, "qr", name)).png({ compressionLevel: 9 })

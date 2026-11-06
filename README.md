@@ -83,7 +83,7 @@ Thay YOUR_USERNAME và YOUR_REPOSITORY bằng thông tin của bạn. Lịch s�
 - Cô dâu có hai mốc: **Bữa cơm thân mật — 16h00, thứ Bảy 28/11/2026** và **Lễ Đón dâu — 09h00, Chủ Nhật 29/11/2026**, tại Chí Minh, Hải Phòng. Địa điểm chung: **Nhà văn hóa thôn Gia Lộc**, tọa độ **20.8066873, 106.4282514**.
 - Mỗi bên có bản đồ và liên kết Google Maps chỉ đường theo đúng tọa độ trong liên kết đã cung cấp. Liên kết HTTPS dùng được trên Android, iOS và máy tính.
 - Bộ đếm hướng tới lễ cưới đầu tiên, **28/11/2026 lúc 16h00 (UTC+7)**. Lần render máy chủ và trình duyệt đều dùng placeholder; chỉ đọc thời gian trong effect, tránh lỗi hydration. Hết thời gian sẽ dừng ở 0.
-- Album chọn 6 ảnh thật, bố cục 2 cột trên điện thoại và 3 cột trên màn hình lớn; chạm để xem ảnh đầy đủ. Hỗ trợ phím mũi tên, Escape và điều hướng bàn phím.
+- Ảnh đầu trang dùng **LMC_0129** mới. Album dùng **9 ảnh còn lại**, bố cục 3 × 3 trên màn hình lớn; hàng đầu lần lượt **LMC_6385 — LMC_6558 — LMC_6853**. Khung dọc 2:3 giữ đầy đủ bố cục, đặc biệt ở hai ảnh kiến trúc 6385 và 6853. Điện thoại dùng 2 cột, căn giữa ảnh cuối; chạm để xem ảnh đầy đủ. Hỗ trợ phím mũi tên, Escape và điều hướng bàn phím.
 - Nhạc lấy từ **resources/sound/Music.mp3**, phát lặp ở âm lượng 35%. Website thử phát khi mở trang; trình duyệt có thể yêu cầu tương tác đầu tiên. Nút bật/tắt luôn hiển thị và tôn trọng việc khách chủ động tắt nhạc.
 - Đã bỏ RSVP và phần câu chuyện mẫu.
 - Mừng cưới: hai cột cân xứng, QR nguyên vẹn, có nút sao chép tài khoản và tải QR về điện thoại.
@@ -105,9 +105,9 @@ Khi thay ảnh, QR hoặc nhạc nguồn, đặt lại file gốc vào resources
 npm run assets
 ```
 
-Sau đó commit các file public/media/ đã cập nhật. Khi clone repository mới hoặc deploy Vercel, dùng trực tiếp public/media/ có sẵn.
+Sau đó commit các file public/media/ và **lib/photo-assets.json** đã cập nhật. File JSON lưu kích thước và phiên bản theo nội dung mỗi ảnh; URL ảnh tự đổi phiên bản khi thay ảnh cùng tên, để trình duyệt/CDN tải đúng bản mới. Khi clone repository mới hoặc deploy Vercel, dùng trực tiếp các file đã có sẵn.
 
-Script tạo ảnh WebP tối đa 1600 × 2000 px, tự xoay theo EXIF và loại metadata máy ảnh; QR giữ PNG không mất dữ liệu. Nhạc được sao chép nguyên bản. Ảnh gốc khoảng 78 MB, bộ WebP khoảng 1,4 MB; ảnh trên trang tiếp tục được tối ưu bởi next/image. Script không sửa ảnh gốc.
+Script tạo ảnh WebP tối đa 1600 × 2000 px, tự xoay theo EXIF và loại metadata máy ảnh; QR giữ PNG không mất dữ liệu. Nhạc được sao chép nguyên bản. Bộ 10 ảnh gốc khoảng 93,4 MB, WebP khoảng 1,7 MB; ảnh trên trang tiếp tục được tối ưu bởi next/image. Script không sửa ảnh gốc.
 
 Font Inter và Playfair Display được lưu tại **public/fonts/**, có đầy đủ ký tự tiếng Việt và giấy phép OFL đi kèm. Website không cần tải font từ Google khi khách mở thiệp.
 

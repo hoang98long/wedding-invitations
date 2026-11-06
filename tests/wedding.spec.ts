@@ -98,17 +98,56 @@ test("countdown stops at zero after the ceremony", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Ngày hạnh phúc đã đến" })).toBeVisible();
 });
 
-test("gallery opens, navigates, traps focus and closes with Escape", async ({ page }) => {
+test("gallery shows nine complete portraits with the feature centered, navigates and closes with Escape", async ({ page }, testInfo) => {
   await page.goto("/");
+  const photos = page.locator('#gallery button[aria-label^="Xem ảnh cưới"]');
+  await expect(photos).toHaveCount(9);
+  const expectedFiles = ["LMC_6385", "LMC_6558", "LMC_6853", "LMC_0464", "LMC_9512", "LMC_9969", "LMC_8281", "LMC_7745", "LMC_8611"];
+  const imageSources = await photos.locator("img").evaluateAll(images => images.map(image => new URL((image as HTMLImageElement).src).searchParams.get("url")));
+  for (const [index, file] of expectedFiles.entries()) {
+    expect(imageSources[index]).toMatch(new RegExp(`^/media/images/${file}\\.webp\\?v=[a-f0-9]{12}$`));
+  }
+  expect(await page.locator("#hero img").evaluate(image => new URL((image as HTMLImageElement).src).searchParams.get("url"))).toMatch(/^\/media\/images\/LMC_0129\.webp\?v=[a-f0-9]{12}$/);
+  for (const width of testInfo.project.name === "mobile" ? [320, 390, 768] : [1024, 1440]) {
+    await page.setViewportSize({ width, height: 1000 });
+    const cards = await photos.evaluateAll(elements => elements.map(element => {
+      const { x, y, width, height } = element.getBoundingClientRect();
+      return { x, y, width, height };
+    }));
+    for (const card of cards) {
+      expect(card.width).toBeCloseTo(cards[0].width, 0);
+      expect(card.height / card.width).toBeCloseTo(1.5, 2);
+    }
+    expect(cards[0].y).toBeCloseTo(cards[1].y, 0);
+    if (width >= 1024) {
+      expect(cards[2].y).toBeCloseTo(cards[1].y, 0);
+      expect(cards[1].x + cards[1].width / 2).toBeCloseTo(width / 2, 0);
+      expect(cards[0].x).toBeLessThan(cards[1].x);
+      expect(cards[2].x).toBeGreaterThan(cards[1].x);
+    } else {
+      expect(cards[8].x + cards[8].width / 2).toBeCloseTo(width / 2, 0);
+    }
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  }
+  await page.setViewportSize(testInfo.project.name === "mobile" ? { width: 390, height: 844 } : { width: 1440, height: 1000 });
+  for (const photo of await photos.all()) await photo.scrollIntoViewIfNeeded();
+  await expect.poll(() => photos.locator("img").evaluateAll(images => images.every(image => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth > 0))).toBe(true);
+  await photos.nth(1).scrollIntoViewIfNeeded();
+  await page.screenshot({ path: `.local/qa/${testInfo.project.name}-new-gallery.png` });
   const opener = page.getByRole("button", { name: /^Xem ảnh cưới 1:/ });
   await opener.click();
   const dialog = page.getByRole("dialog");
   await expect(dialog).toBeVisible();
-  await expect(dialog).toContainText("1 / 6");
+  await expect(dialog).toContainText("1 / 9");
   await page.getByRole("button", { name: "Ảnh tiếp theo" }).click();
-  await expect(dialog).toContainText("2 / 6");
+  await expect(dialog).toContainText("2 / 9");
   await page.keyboard.press("ArrowLeft");
-  await expect(dialog).toContainText("1 / 6");
+  await expect(dialog).toContainText("1 / 9");
+  await page.keyboard.press("ArrowLeft");
+  await expect(dialog).toContainText("9 / 9");
+  await expect(dialog.locator('p[aria-live="polite"]')).toHaveText("9 / 9");
+  await page.keyboard.press("ArrowRight");
+  await expect(dialog).toContainText("1 / 9");
   await page.keyboard.press("Shift+Tab");
   expect(await dialog.evaluate(element => element.contains(document.activeElement))).toBe(true);
   await page.keyboard.press("Escape");
